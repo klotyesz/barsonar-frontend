@@ -1,0 +1,59 @@
+import { Container, Nav, Navbar, Button, Image } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import AuthModal from "./AuthModal";
+
+function Menu() {
+  const [showAuth, setShowAuth] = useState(false);
+
+  return (
+    <>
+      <Navbar
+        bg="dark"
+        data-bs-theme="dark"
+        expand="lg"
+        className="py-3 shadow-sm position-relative"
+      >
+        <Container fluid className="px-4">
+
+          {/* Logo */}
+          <Navbar.Brand
+            as={NavLink}
+            to="/"
+            className="d-flex align-items-center gap-2"
+          >
+            <Image src="/logo.svg" height={36} />
+          </Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="main-navbar" />
+
+          <Navbar.Collapse id="main-navbar">
+
+            {/* Center */}
+            <Nav className="navbar-center gap-4">
+              <Nav.Link as={NavLink} to="/about">About</Nav.Link>
+              <Nav.Link as={NavLink} to="/bars">Bars</Nav.Link>
+              <Nav.Link as={NavLink} to="/popular">Popular Places</Nav.Link>
+            </Nav>
+
+            {/* Login button */}
+            <Nav className="ms-auto">
+              <Button
+                variant="outline-warning"
+                className="px-4 btn-orange"
+                onClick={() => setShowAuth(true)}
+              >
+                Login
+              </Button>
+            </Nav>
+
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      <AuthModal show={showAuth} onHide={() => setShowAuth(false)} />
+    </>
+  );
+}
+
+export default Menu;

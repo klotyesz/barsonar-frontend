@@ -1,0 +1,25 @@
+/* TRUE centered navbar links */
+.navbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Keep it usable on mobile */
+@media (max-width: 991px) {
+  .navbar-center {
+    position: static;
+    transform: none;
+    margin: 1rem 0;
+  }
+}
+
+/* Orange accents */
+.text-orange {
+  color: #fd7e14;
+}
+
+.navbar-dark .nav-link.active,
+.navbar-dark .nav-link:hover {
+  color: #fd7e14;
+}

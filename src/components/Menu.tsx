@@ -12,7 +12,7 @@ function Menu() {
         bg="dark"
         data-bs-theme="dark"
         expand="lg"
-        className="py-3 shadow-sm position-relative"
+        className="sticky-top"
       >
         <Container fluid className="px-4">
 

@@ -112,7 +112,7 @@
   padding: 10px 12px;
   border-radius: 12px;
   margin-bottom: 10px;
-  font-size: 12px;
+  font-size: 18px;
   line-height: 1.4;
 }
 
@@ -136,7 +136,7 @@
   padding: 10px;
   color: var(--text);
   outline: none;
-  font-size: 14px;
+  font-size: 18px;
 }
 
 .chat-footer input::placeholder {

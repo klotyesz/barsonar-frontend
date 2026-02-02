@@ -18,7 +18,7 @@ const ChatWidget: React.FC = () => {
         </div>
 
         <div className="chat-body">
-          <div className="message bot">Szia! Én egy AI Chatbot vagyok!😊 Miben segíthetek?🍻</div>
+          <div className="message bot">Szia!<br/>Én egy AI Chatbot vagyok!😊<br/>Miben segíthetek?🍻</div>
         </div>
 
         <div className="chat-footer">

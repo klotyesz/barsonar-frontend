@@ -1,5 +1,6 @@
 import { Modal, Button, Form, Nav, Image } from "react-bootstrap";
 import { useState } from "react";
+import { login } from "../api/auth";
 
 interface AuthModalProps {
   show: boolean;
@@ -8,6 +9,37 @@ interface AuthModalProps {
 
 function AuthModal({ show, onHide }: AuthModalProps) {
   const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState<string>("")
+  const [pass, setPass] = useState<string>("")
+  const [err, setErr] = useState<string>("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setErr("")
+
+    if (!email || !pass) {
+      setErr("Email és jelszó kitöltése kötelező")
+      return
+    }
+
+    try {
+      if (mode === "login") {
+        const res = await login(email, pass)
+        if (res) {
+          setErr("")
+          setEmail("")
+          setPass("")
+          onHide()
+        }
+
+        if (res) {
+          setErr(res)
+        }
+      }
+    } catch (error) {
+      setErr("Bejelentkezés sikertelen")
+    }
+  }
 
   return (
     <Modal
@@ -44,7 +76,7 @@ function AuthModal({ show, onHide }: AuthModalProps) {
         </Nav>
 
         {/* Form */}
-        <Form>
+        <Form onSubmit={handleSubmit}>
           {mode === "signup" && (
             <Form.Group className="mb-3">
               <Form.Label>Name</Form.Label>
@@ -54,15 +86,23 @@ function AuthModal({ show, onHide }: AuthModalProps) {
 
           <Form.Group className="mb-3">
             <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder="you@example.com" />
+            <Form.Control type="email" placeholder="you@example.com" onChange={(e) => setEmail(e.target.value)} />
           </Form.Group>
 
           <Form.Group className="mb-4">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="••••••••" />
+            <Form.Control type="password" placeholder="••••••••" onChange={(e) => setPass(e.target.value)} />
           </Form.Group>
 
-          <Button className="w-100 btn-orange">
+            { err ? 
+              <Form.Label className="mb-4">
+                {err}
+              </Form.Label>
+              :
+              <></>
+            }
+          
+          <Button className="w-100 btn-orange" type="submit">
             {mode === "login" ? "Login" : "Create Account"}
           </Button>
         </Form>

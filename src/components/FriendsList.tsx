@@ -11,7 +11,7 @@ interface Bar {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const BarsList = () => {
+const FriendsList = () => {
   const [bars, setBars] = useState<Bar[]>([]);
 
   const fetchBars = async () => {
@@ -44,23 +44,7 @@ const BarsList = () => {
         </div>
       </section>
     </>
-    // <table>
-    //   <thead>
-    //     <tr>
-    //       <th>Név</th>
-    //       <th>Cím</th>
-    //     </tr>
-    //   </thead>
-    //   <tbody>
-    //     {bars.map((bar) => (
-    //       <tr key={bar.id}>
-    //         <td>{bar.name}</td>
-    //         <td>{bar.address}</td>
-    //       </tr>
-    //     ))}
-    //   </tbody>
-    // </table>
   );
 };
 
-export default BarsList;
+export default FriendsList;

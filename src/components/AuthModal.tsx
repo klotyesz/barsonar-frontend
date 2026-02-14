@@ -1,6 +1,7 @@
 import { Modal, Button, Form, Nav, Image } from "react-bootstrap";
 import { useState } from "react";
-import { login } from "../api/auth";
+import { login as apiLogin } from "../api/auth";
+import { useAuth } from "../context/AuthContext";
 
 interface AuthModalProps {
   show: boolean;
@@ -9,45 +10,47 @@ interface AuthModalProps {
 
 function AuthModal({ show, onHide }: AuthModalProps) {
   const [mode, setMode] = useState<"login" | "signup">("login");
-  const [email, setEmail] = useState<string>("")
-  const [pass, setPass] = useState<string>("")
-  const [err, setErr] = useState<string>("")
+  const [email, setEmail] = useState<string>("");
+  const [pass, setPass] = useState<string>("");
+  const [err, setErr] = useState<string>("");
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setErr("")
+    e.preventDefault();
+    setErr("");
 
     if (!email || !pass) {
-      setErr("Email és jelszó kitöltése kötelező")
-      return
+      setErr("Email és jelszó kitöltése kötelező");
+      return;
     }
 
     try {
       if (mode === "login") {
-        const res = await login(email, pass)
-        if (res) {
-          setErr("")
-          setEmail("")
-          setPass("")
-          onHide()
-        }
+        const res = await apiLogin(email, pass);
+        console.log(res);
 
-        if (res) {
-          setErr(res)
+        if (res && res.success) {
+          // Log the user ID to console
+          console.log("Bejelentkezett user ID:", res.userId);
+
+          login(res.userId); // Update auth context with user ID
+          setErr("");
+          setEmail("");
+          setPass("");
+          onHide();
+        } else if (res && res.message) {
+          setErr(res.message);
+        } else {
+          setErr("Bejelentkezés sikertelen");
         }
       }
     } catch (error) {
-      setErr("Bejelentkezés sikertelen")
+      setErr("Bejelentkezés sikertelen");
     }
-  }
+  };
 
   return (
-    <Modal
-      show={show}
-      onHide={onHide}
-      centered
-      contentClassName="auth-modal"
-    >
+    <Modal show={show} onHide={onHide} centered contentClassName="auth-modal">
       <Modal.Body className="p-4">
         {/* Logo */}
         <div className="text-center mb-4">
@@ -86,22 +89,24 @@ function AuthModal({ show, onHide }: AuthModalProps) {
 
           <Form.Group className="mb-3">
             <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder="you@example.com" onChange={(e) => setEmail(e.target.value)} />
+            <Form.Control
+              type="email"
+              placeholder="you@example.com"
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </Form.Group>
 
           <Form.Group className="mb-4">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="••••••••" onChange={(e) => setPass(e.target.value)} />
+            <Form.Control
+              type="password"
+              placeholder="••••••••"
+              onChange={(e) => setPass(e.target.value)}
+            />
           </Form.Group>
 
-            { err ? 
-              <Form.Label className="mb-4">
-                {err}
-              </Form.Label>
-              :
-              <></>
-            }
-          
+          {err ? <Form.Label className="mb-4">{err}</Form.Label> : <></>}
+
           <Button className="w-100 btn-orange" type="submit">
             {mode === "login" ? "Login" : "Create Account"}
           </Button>

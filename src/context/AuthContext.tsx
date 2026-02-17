@@ -1,5 +1,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import type { ReactNode } from "react";
+import type { ReactNode } from "react"
+import type { User } from "../interfaces/User";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -14,14 +17,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Check if user is authenticated on mount
-  useEffect(() => {
-    const authStatus = localStorage.getItem("isAuthenticated");
-    const storedUserId = localStorage.getItem("userId");
-    if (authStatus === "true" && storedUserId) {
-      setIsAuthenticated(true);
-      setUserId(storedUserId);
+  const me = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/me`, {
+        credentials: "include",
+      })
+
+      if (res.ok) {
+        const data: User = await res.json();
+
+        login(data.id.toString())
+
+        return
+      }
+
+      if (res.status == 401) {
+        logout()
+        return
+      }
+
+      return res.json()
+    } catch (err) {
+      logout()
+      return err
     }
+  }
+
+  useEffect(() => {
+    me()
   }, []);
 
   const login = (userId: string) => {
@@ -29,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUserId(userId);
     localStorage.setItem("isAuthenticated", "true");
     localStorage.setItem("userId", userId);
-  };
+  }
 
   const logout = () => {
     setIsAuthenticated(false);

@@ -1,17 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import "../style/profileWidget.css";
-import { logout as apiLogout } from "../api/auth";
+import { logout as apiLogout, me } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
-import { Navigate } from "react-router";
+import { Link, Navigate } from "react-router";
+import type { User } from "../interfaces/User";
+import AuthModal from "./AuthModal";
 
 export function ProfileWidget() {
   const { isAuthenticated, logout, userId } = useAuth();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<User>()
+  const [showAuth, setShowAuth] = useState(false);
+
   const handleLogout = async () => {
     await apiLogout();
     logout();
   };
+
+  const getProfile = async () => {
+    setUser(await me())
+  }
+
+  useEffect(() => {
+    getProfile()
+  }, [])
 
   return (
     <>
@@ -28,8 +41,8 @@ export function ProfileWidget() {
             <img src="/avatar_profile.svg" alt="Avatar" />
           </div>
           <div className="profile-info">
-            <span className="profile-name">Felhasználó Név</span>
-            <span className="profile-email">email@email.com</span>
+            <span className="profile-name">{user?.userName}</span>
+            <span className="profile-email">{user?.email}</span>
           </div>
         </div>
 
@@ -37,7 +50,9 @@ export function ProfileWidget() {
 
         <div className="profile-actions">
           <button className="profile-btn">Kedvencek</button>
-          <button className="profile-btn" onClick={() => (window.location.href = "/friends")}>Barátok</button>
+            <Link to="/friends" className="profile-btn" style={{textDecorationLine:"none"}}>
+              Barátok
+            </Link>
 
           <button className="profile-btn logout" onClick={handleLogout}>
             Kijelentkezés

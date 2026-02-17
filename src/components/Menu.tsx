@@ -1,19 +1,13 @@
 import { Container, Nav, Navbar, Button, Image } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
-import { logout as apiLogout } from "../api/auth";
 import { ProfileWidget } from "./ProfileWidget";
 
 function Menu() {
   const [showAuth, setShowAuth] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
-
-  const handleLogout = async () => {
-    await apiLogout();
-    logout();
-  };
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
@@ -25,7 +19,7 @@ function Menu() {
             to="/"
             className="d-flex align-items-center gap-2"
           >
-            <Image src="/logo.svg" height={36} />
+            <Image src="/logo.png" height={36} />
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="main-navbar" />
@@ -47,23 +41,17 @@ function Menu() {
             {/* Login/Logout button */}
             <Nav className="ms-auto">
               {isAuthenticated ? (
-                // <Button
-                //   variant="outline-warning"
-                //   className="px-4 btn-orange"
-                //   onClick={handleLogout}
-                // >
-                //   Logout
-                // </Button>
-                <ProfileWidget/>
+                <ProfileWidget />
               ) : (
                 <Button
                   variant="outline-warning"
                   className="px-4 btn-orange"
                   onClick={() => setShowAuth(true)}
                 >
-                  Login
+                  Bejelentkezés
                 </Button>
-              )}
+              )
+              }
             </Nav>
           </Navbar.Collapse>
         </Container>

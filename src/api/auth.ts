@@ -1,3 +1,5 @@
+import type { User } from "../interfaces/User";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export async function login(email: string, pass: string) {
@@ -7,7 +9,7 @@ export async function login(email: string, pass: string) {
       body: JSON.stringify({ email, password: pass }),
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-    });
+    })
     if (res.status === 200) {
       const data = await res.json();
       return { success: true, ...data };
@@ -16,6 +18,61 @@ export async function login(email: string, pass: string) {
     return res.json();
   } catch (err) {
     return err;
+  }
+}
+
+export async function me() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/me`, {
+      // method: "GET",
+      // headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    })
+    if (res.ok) {
+      const data = await res.json();
+      return data as User
+    }
+
+    return res.json()
+  } catch (err) {
+    return err
+  }
+}
+
+export async function signup(un: string, e: string, p: string, a?: number) {
+  try {
+    let signupData = null
+    
+    if (a == 0) {
+      signupData = JSON.stringify({
+        userName: un,
+        email: e,
+        password: p
+      })
+    } else {
+      signupData = JSON.stringify({
+        userName: un,
+        email: e,
+        password: p,
+        age: a
+      })
+    }
+
+    const res = await fetch(`${API_BASE_URL}/user`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: signupData,
+    })
+
+    const data = await res.json()
+
+    if (!data.ok) {
+      throw data.message
+    } else {
+      return data
+    }
+  } catch (err: any) {
+    return err
   }
 }
 

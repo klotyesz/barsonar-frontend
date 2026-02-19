@@ -1,9 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Nova+Square&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Nova+Square&display=swap"); */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
 html,
 body,
 #root {
-  height: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   background-color: #292b2c;
@@ -21,4 +22,17 @@ body,
   font-family: "Nova Square", sans-serif;
   font-weight: 400;
   font-style: normal;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }

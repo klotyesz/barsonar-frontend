@@ -5,10 +5,12 @@ import Menu from "../components/Menu";
 export function Bars() {
   return (
     <>
-      <Menu />
-      <h1>Bars</h1>
-      <ChatWidget />
-      <Footer></Footer>
+      <div className="page-layout">
+        <Menu />
+        <h1>Bars</h1>
+        <ChatWidget />
+        <Footer></Footer>
+      </div>
     </>
   );
 }

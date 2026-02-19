@@ -8,13 +8,15 @@ import { Friends } from "./pages/FriendsPage";
 function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/bars" element={<Bars />} />
-        <Route path="/popular" element={<Popular />} />
-        <Route path="/friends" element={<Friends />} />
-      </Routes>
+      <div className="app-layout">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/bars" element={<Bars />} />
+          <Route path="/popular" element={<Popular />} />
+          <Route path="/friends" element={<Friends />} />
+        </Routes>
+      </div>
     </>
   );
 }

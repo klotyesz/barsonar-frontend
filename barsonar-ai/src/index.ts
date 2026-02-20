@@ -43,38 +43,14 @@ export default {
       const body = await request.json() as ChatRequest;
       const { messages } = body;
 
-      const lastUserMessage = [...messages].reverse().find((m) => m.role === "user");
-      const userText = (lastUserMessage?.content?.trim() ?? "").toLowerCase();
-
-      const TOPIC_KEYWORDS = [
-        "bar", "pub", "kocsma", "sör", "bor", "ital", "beer", "wine", "drink",
-        "cocktail", "whiskey", "whisky", "pia", "szórakozás", "nightlife",
-        "night life", "inn", "tavern", "brewery", "sörfőzde", "borozó",
-        "alcohol", "alkohol", "ivás", "drinking", "inni", "shot", "gin",
-        "rum", "vodka", "tequila", "aperol", "prosecco", "champagne",
-        "fröccs", "pezsgő", "likőr", "liqueur", "mixology",
-      ];
-
-      const hasTopicKeyword = TOPIC_KEYWORDS.some((kw) => userText.includes(kw));
-
-      if (!hasTopicKeyword) {
-        return new Response(
-          JSON.stringify({
-            response: "Csak kocsmákról és italokról tudok beszélni. Kérlek ezzel a témával kapcsolatban kérdezz! 🍻",
-            result: "Csak kocsmákról és italokról tudok beszélni. Kérlek ezzel a témával kapcsolatban kérdezz! 🍻",
-          }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }
-        );
-      }
+      const systemPrompt = {
+        role: "system",
+        content: "You are BarSonar AI, an expert on bars, pubs, and all kinds of alcoholic beverages. Your sole purpose is to provide information and answer questions related to this topic. Refuse to answer any questions that are not about bars, drinks, or nightlife. Be friendly and helpful and try to answer briefly."
+      };
 
       const result = await env.AI.run(
         "@cf/meta/llama-3-8b-instruct",
-        { messages }
+        { messages: [systemPrompt, ...messages] }
       );
 
       return new Response(JSON.stringify(result), {

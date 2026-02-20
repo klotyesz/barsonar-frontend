@@ -7,7 +7,7 @@ type Message = {
 };
 
 
-const WORKER_URL = "https://barsonar-ai.ifj-sarkadi-g.workers.dev";
+const WORKER_URL = import.meta.env.VITE_WORKER_URL;
 
 const ChatWidget: React.FC = () => {
   const [open, setOpen] = useState(false);

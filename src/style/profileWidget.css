@@ -105,3 +105,48 @@
 .profile-btn.logout:hover {
   background: rgba(255, 92, 92, 0.1);
 }
+
+.settings-interests-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.interest-chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #2a2a2a;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 13px;
+  border: 2px solid transparent;
+  transition: 0.2s ease;
+  user-select: none;
+}
+
+.interest-chip:hover {
+  background: #3a3a3a;
+  color: white;
+}
+
+.interest-chip.selected {
+  background: rgba(255, 160, 0, 0.15);
+  border-color: #ffa000;
+  color: #ffa000;
+}
+@media (max-width: 768px) {
+  .profile-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%) translateY(-10px);
+    width: calc(100% - 32px);
+    max-width: 320px;
+  }
+
+  .profile-panel.show {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+}

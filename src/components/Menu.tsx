@@ -1,5 +1,5 @@
 import { Container, Nav, Navbar, Button, Image } from "react-bootstrap";
-import { Link, NavLink } from "react-router-dom";
+import {  NavLink } from "react-router-dom";
 import { useState } from "react";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";
@@ -28,13 +28,16 @@ function Menu() {
             {/* Center */}
             <Nav className="navbar-center gap-4">
               <Nav.Link as={NavLink} to="/about">
-                About
+                Rólunk
               </Nav.Link>
               <Nav.Link as={NavLink} to="/bars">
-                Bars
+                Térkép
               </Nav.Link>
               <Nav.Link as={NavLink} to="/popular">
-                Popular Places
+                Ajánlott bárok
+              </Nav.Link>
+              <Nav.Link as={NavLink} to="/news">
+                Hírek
               </Nav.Link>
             </Nav>
 

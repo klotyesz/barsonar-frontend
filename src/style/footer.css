@@ -20,14 +20,39 @@ footer {
   padding-bottom: 0;
   margin-top: auto;
   flex-shrink: 0;
+  width: 100%;
+}
+
+#github-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #eaeaea;
+}
+
+#github-link a {
+  color: #eaeaea;
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {
   .logo {
-    min-width: 60px;
-    min-height: 30px;
+    width: 100px;
+    min-width: 100px;
+    min-height: 50px;
+    height: auto;
   }
   #copyright {
     padding-left: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  footer .row > div {
+    margin-bottom: 1.5rem;
+  }
+  
+  footer .row > div:last-child {
+    margin-bottom: 0;
   }
 }

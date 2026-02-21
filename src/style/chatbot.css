@@ -160,6 +160,18 @@
   border-bottom-left-radius: 4px;
 }
 
+.message.bot.loading-animation {
+  background: transparent;
+  padding: 0;
+}
+
+.message.bot.loading-animation dotlottie-react {
+  left: auto;
+  width: 100%;
+  height: auto;
+  min-height: 40px;
+}
+
 
 .chat-footer {
   display: flex;
@@ -180,7 +192,35 @@
   font-size: 13px;
 }
 
+.chat-footer textarea {
+  flex: 1;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 20px;
+  padding: 8px 14px;
+  color: var(--text);
+  outline: none;
+  font-size: 13px;
+  font-family: inherit;
+  resize: none;
+  overflow-y: auto;
+  max-height: 100px;
+  min-height: 40px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  scrollbar-width: none;
+}
+
+.chat-footer textarea::-webkit-scrollbar {
+  display: none;
+}
+
 .chat-footer input:focus {
+  border-color: var(--accent);
+}
+
+.chat-footer textarea:focus {
   border-color: var(--accent);
 }
 

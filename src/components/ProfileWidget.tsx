@@ -3,15 +3,15 @@ import { Button } from "react-bootstrap";
 import "../style/profileWidget.css";
 import { logout as apiLogout, me } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
-import { Link, Navigate } from "react-router";
+import { Link } from "react-router";
 import type { User } from "../interfaces/User";
-import AuthModal from "./AuthModal";
+import SettingsModal from "./SettingsModal";
 
 export function ProfileWidget() {
-  const { isAuthenticated, logout, userId } = useAuth();
+  const { logout } = useAuth();
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState<User>()
-  const [showAuth, setShowAuth] = useState(false);
+  const [user, setUser] = useState<User>();
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleLogout = async () => {
     await apiLogout();
@@ -19,12 +19,12 @@ export function ProfileWidget() {
   };
 
   const getProfile = async () => {
-    setUser(await me())
-  }
+    setUser(await me());
+  };
 
   useEffect(() => {
-    getProfile()
-  }, [])
+    getProfile();
+  }, []);
 
   return (
     <>
@@ -50,15 +50,32 @@ export function ProfileWidget() {
 
         <div className="profile-actions">
           <button className="profile-btn">Kedvencek</button>
-            <Link to="/friends" className="profile-btn" style={{textDecorationLine:"none"}}>
-              Barátok
-            </Link>
+          <Link
+            to="/friends"
+            className="profile-btn"
+            style={{ textDecorationLine: "none" }}
+          >
+            Barátok
+          </Link>
+          <button
+            className="profile-btn"
+            onClick={() => {
+              setOpen(false);
+              setShowSettings(true);
+            }}
+          >
+            Beállítások
+          </button>
 
           <button className="profile-btn logout" onClick={handleLogout}>
             Kijelentkezés
           </button>
         </div>
       </div>
+      <SettingsModal
+        show={showSettings}
+        onHide={() => setShowSettings(false)}
+      />
     </>
   );
 }

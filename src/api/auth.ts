@@ -76,15 +76,7 @@ export async function signup(un: string, e: string, p: string, a?: number) {
   }
 }
 
-export async function addInterest(interest: string) {
-  const res = await fetch(`${API_BASE_URL}/user/addInterest`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ interest }),
-  });
-  return res.json();
-}
+
 
 export async function logout() {
   const res = await fetch(`${API_BASE_URL}/auth/logout`, {

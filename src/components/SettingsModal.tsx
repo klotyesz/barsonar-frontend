@@ -1,6 +1,6 @@
 import { Modal, Button } from "react-bootstrap";
-import { useState } from "react";
-import { addInterest } from "../api/auth";
+import { useState, useEffect } from "react";
+import { addInterest, getInterests } from "../api/user";
 import { useAuth } from "../context/AuthContext";
 
 interface SettingsModalProps {
@@ -24,6 +24,19 @@ function SettingsModal({ show, onHide }: SettingsModalProps) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [err, setErr] = useState<string>("");
+  const [interests, setInterests] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (show) {
+      fetchInterests();
+    }
+  }, [show]);
+
+  const fetchInterests = async () => {
+    const res = await getInterests();
+    const interestNames = Array.isArray(res) ? res.map((item: any) => item.interest) : [];
+    setInterests(interestNames);
+  }
 
   const handleSave = async () => {
     if (!userId || !selected) return;
@@ -35,11 +48,11 @@ function SettingsModal({ show, onHide }: SettingsModalProps) {
         setErr("Ezt az érdeklődési kört már hozzáadtad!");
       } else {
         setSaved(true);
+        await fetchInterests();
         setTimeout(() => {
           setSaved(false);
           setSelected(null);
           setErr("");
-          onHide();
         }, 1000);
       }
     } catch {
@@ -73,12 +86,43 @@ function SettingsModal({ show, onHide }: SettingsModalProps) {
           Válaszd ki az érdeklődési köröd, hogy személyre szabott ajánlásokat
           kapj.
         </p>
+
+        {interests.length > 0 && (
+          <div style={{ marginBottom: "20px" }}>
+            <p style={{ color: "#aaa", fontSize: "12px", marginBottom: "8px" }}>
+              Hozzáadott érdeklődési köreid:
+            </p>
+            <div className="settings-interests-grid">
+              {interests.map((interest) => (
+                <div
+                  key={interest}
+                  className="interest-chip selected"
+                  style={{ opacity: 0.7 }}
+                >
+                  ✓ {interest}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <p style={{ color: "#aaa", fontSize: "12px", marginBottom: "8px" }}>
+          További érdeklődési körök:
+        </p>
         <div className="settings-interests-grid">
           {INTERESTS.map((interest) => (
             <div
               key={interest}
-              className={`interest-chip ${selected === interest ? "selected" : ""}`}
-              onClick={() => setSelected(interest)}
+              className={`interest-chip ${selected === interest ? "selected" : ""} ${
+                interests.includes(interest) ? "disabled" : ""
+              }`}
+              onClick={() =>
+                !interests.includes(interest) && setSelected(interest)
+              }
+              style={{
+                opacity: interests.includes(interest) ? 0.5 : 1,
+                cursor: interests.includes(interest) ? "not-allowed" : "pointer",
+              }}
             >
               {interest}
             </div>

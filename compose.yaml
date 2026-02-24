@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  barsonar-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:3000
+        VITE_PROXY_TARGET: http://localhost:3000
+        VITE_WORKER_URL: https://projekt-nev.felhasznalonev.workers.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      VITE_API_BASE_URL: http://localhost:3000
+      VITE_PROXY_TARGET: http://localhost:3000
+      VITE_WORKER_URL: https://projekt-nev.felhasznalonev.workers.dev
+    restart: unless-stopped

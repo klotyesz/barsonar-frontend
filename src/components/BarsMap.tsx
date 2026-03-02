@@ -212,14 +212,18 @@ const BarsMap = () => {
           const location = place.geometry?.location;
           if (!location) return;
           const isOpen = place.opening_hours?.isOpen;
+          let pinPath = "";
+          if (isOpen === undefined) {
+            pinPath = "barsonar_pin_unknown.png";
+          } else {
+            pinPath = "barsonar_pin_closed.png"
+          }
           const marker = new window.google.maps.Marker({
             map,
             position: location,
             title: place.name || "",
             icon: {
-              url: !isOpen
-                ? "barsonar_pin_open.png"
-                : "barsonar_pin_closed.png",
+              url: pinPath,
               scaledSize: new window.google.maps.Size(40, 60),
             },
           });

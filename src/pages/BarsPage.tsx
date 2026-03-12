@@ -8,7 +8,6 @@ export function Bars() {
     <>
       <div className="page-layout">
         <Menu />
-        <h1>Bars</h1>
         <BarsMap></BarsMap>
         <ChatWidget />
         <Footer></Footer>

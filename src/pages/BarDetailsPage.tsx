@@ -491,75 +491,31 @@ export const BarDetailsPage = () => {
               <Col xs={12}>
                 <Card className="bar-details-card">
                   <Card.Body>
-                    <Tab.Container defaultActiveKey="google-reviews">
+                    <Tab.Container defaultActiveKey="our-reviews">
                       <div className="bar-tab-header">
                         <Nav variant="pills" className="bar-tab-nav">
-                          <Nav.Item>
-                            <Nav.Link
-                              eventKey="google-reviews"
-                              className="bar-tab-pill"
-                            >
-                              <IconBrandGoogle size={15} className="me-1" />{" "}
-                              Google vélemények
-                            </Nav.Link>
-                          </Nav.Item>
                           <Nav.Item>
                             <Nav.Link
                               eventKey="our-reviews"
                               className="bar-tab-pill"
                             >
-                              <IconMessageCircle size={15} className="me-1" />{" "}
-                              BarSonar vélemények
+                              <IconMessageCircle size={15} className="me-1" /> BarSonar
+                              vélemények
+                            </Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link
+                              eventKey="google-reviews"
+                              className="bar-tab-pill"
+                            >
+                              <IconBrandGoogle size={15} className="me-1" /> Google
+                              vélemények
                             </Nav.Link>
                           </Nav.Item>
                         </Nav>
                       </div>
                       <hr className="bar-divider" />
                       <Tab.Content>
-                        <Tab.Pane eventKey="google-reviews">
-                          {bar.reviews && bar.reviews.length > 0 ? (
-                            <Row className="g-3">
-                              {bar.reviews
-                                .slice(0, 6)
-                                .map((review: any, idx: number) => (
-                                  <Col sm={6} key={idx}>
-                                    <Card className="bar-review-card h-100">
-                                      <Card.Body>
-                                        <div className="bar-review-header">
-                                          <img
-                                            src="/default_avatar.png"
-                                            alt={review.author_name}
-                                            className="bar-review-avatar"
-                                          />
-                                          <div>
-                                            <div className="bar-review-author">
-                                              {review.author_name}
-                                            </div>
-                                            <StarRating
-                                              rating={review.rating}
-                                            />
-                                          </div>
-                                        </div>
-                                        {review.text && (
-                                          <p className="bar-review-text">
-                                            {review.text}
-                                          </p>
-                                        )}
-                                        <span className="bar-review-time">
-                                          {review.relative_time_description}
-                                        </span>
-                                      </Card.Body>
-                                    </Card>
-                                  </Col>
-                                ))}
-                            </Row>
-                          ) : (
-                            <p className="bar-empty-state">
-                              Nincsenek Google vélemények.
-                            </p>
-                          )}
-                        </Tab.Pane>
-
                         <Tab.Pane eventKey="our-reviews">
                           {isAuthenticated && (
                             <div className="bar-comment-form mb-4">
@@ -685,6 +641,50 @@ export const BarDetailsPage = () => {
                             </p>
                           )}
                         </Tab.Pane>
+
+                        <Tab.Pane eventKey="google-reviews">
+                          {bar.reviews && bar.reviews.length > 0 ? (
+                            <Row className="g-3">
+                              {bar.reviews
+                                .slice(0, 6)
+                                .map((review: any, idx: number) => (
+                                  <Col sm={6} key={idx}>
+                                    <Card className="bar-review-card h-100">
+                                      <Card.Body>
+                                        <div className="bar-review-header">
+                                          <img
+                                            src="/default_avatar.png"
+                                            alt={review.author_name}
+                                            className="bar-review-avatar"
+                                          />
+                                          <div>
+                                            <div className="bar-review-author">
+                                              {review.author_name}
+                                            </div>
+                                            <StarRating
+                                              rating={review.rating}
+                                            />
+                                          </div>
+                                        </div>
+                                        {review.text && (
+                                          <p className="bar-review-text">
+                                            {review.text}
+                                          </p>
+                                        )}
+                                        <span className="bar-review-time">
+                                          {review.relative_time_description}
+                                        </span>
+                                      </Card.Body>
+                                    </Card>
+                                  </Col>
+                                ))}
+                            </Row>
+                          ) : (
+                            <p className="bar-empty-state">
+                              Nincsenek Google vélemények.
+                            </p>
+                          )}
+                        </Tab.Pane>
                       </Tab.Content>
                     </Tab.Container>
                   </Card.Body>
@@ -698,18 +698,9 @@ export const BarDetailsPage = () => {
               <Col xs={12}>
                 <Card className="bar-details-card">
                   <Card.Body>
-                    <Tab.Container defaultActiveKey="google-photos">
+                    <Tab.Container defaultActiveKey="our-photos">
                       <div className="bar-tab-header">
                         <Nav variant="pills" className="bar-tab-nav">
-                          <Nav.Item>
-                            <Nav.Link
-                              eventKey="google-photos"
-                              className="bar-tab-pill"
-                            >
-                              <IconBrandGoogle size={14} className="me-1" />{" "}
-                              Google
-                            </Nav.Link>
-                          </Nav.Item>
                           <Nav.Item>
                             <Nav.Link
                               eventKey="our-photos"
@@ -718,29 +709,18 @@ export const BarDetailsPage = () => {
                               <IconPhoto size={14} className="me-1" /> BarSonar
                             </Nav.Link>
                           </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link
+                              eventKey="google-photos"
+                              className="bar-tab-pill"
+                            >
+                              <IconBrandGoogle size={14} className="me-1" /> Google
+                            </Nav.Link>
+                          </Nav.Item>
                         </Nav>
                       </div>
                       <hr className="bar-divider" />
                       <Tab.Content>
-                        <Tab.Pane eventKey="google-photos">
-                          {googlePhotos.length > 0 ? (
-                            <div className="bar-gallery-grid">
-                              {googlePhotos.map((url, idx) => (
-                                <div key={idx} className="bar-gallery-item">
-                                  <img
-                                    src={url}
-                                    alt={`${bar.name} ${idx + 2}`}
-                                    className="bar-gallery-img"
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="bar-empty-state">
-                              Nincsenek Google fotók.
-                            </p>
-                          )}
-                        </Tab.Pane>
                         <Tab.Pane eventKey="our-photos">
                           {ourPhotos.length > 0 ? (
                             <div className="bar-gallery-grid">
@@ -762,6 +742,25 @@ export const BarDetailsPage = () => {
                           ) : (
                             <p className="bar-empty-state">
                               Még nincsenek feltöltött fotók.
+                            </p>
+                          )}
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="google-photos">
+                          {googlePhotos.length > 0 ? (
+                            <div className="bar-gallery-grid">
+                              {googlePhotos.map((url, idx) => (
+                                <div key={idx} className="bar-gallery-item">
+                                  <img
+                                    src={url}
+                                    alt={`${bar.name} ${idx + 2}`}
+                                    className="bar-gallery-img"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="bar-empty-state">
+                              Nincsenek Google fotók.
                             </p>
                           )}
                         </Tab.Pane>

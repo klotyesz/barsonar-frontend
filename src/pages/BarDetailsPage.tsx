@@ -266,7 +266,6 @@ export const BarDetailsPage = () => {
 
       if (selectedPhotos.length > 0 && resolvedPlaceId) {
         const fd = new FormData();
-        fd.append("userID", String(userId));
         fd.append("placeID", String(resolvedPlaceId));
         selectedPhotos.forEach((f) => fd.append("file", f));
         const photoRes = await fetch(`${API_BASE_URL}/photo/upload`, {

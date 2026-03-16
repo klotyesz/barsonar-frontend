@@ -5,20 +5,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        VITE_API_BASE_URL: http://localhost:3000
-        VITE_PROXY_TARGET: http://localhost:3000
-        VITE_WORKER_URL: https://projekt-nev.felhasznalonev.workers.dev
     ports:
       - "5173:5173"
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
-    env_file:
-      - .env
     environment:
       NODE_ENV: production
       VITE_API_BASE_URL: http://localhost:3000
       VITE_PROXY_TARGET: http://localhost:3000
       VITE_WORKER_URL: https://projekt-nev.felhasznalonev.workers.dev
+      VITE_GOOGLE_MAPS_API_KEY: Your-Google-Maps-API-Key-Goes-Here
     restart: unless-stopped

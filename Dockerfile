@@ -2,8 +2,6 @@ FROM node:22.19.0-alpine
 
 WORKDIR /usr/src/app
 
-RUN apk add --no-cache netcat-openbsd
-
 COPY package.json package-lock.json ./
 
 RUN npm install
@@ -12,10 +10,17 @@ RUN npm i -g serve
 
 COPY . .
 
-COPY docker-entrypoint.sh /usr/local/bin
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ARG VITE_API_BASE_URL
+ARG VITE_PROXY_TARGET
+ARG VITE_WORKER_URL
+ARG VITE_GOOGLE_MAPS_API_KEY
 
-ENTRYPOINT [ "/usr/local/bin/docker-entrypoint.sh" ]
+RUN \
+VITE_API_BASE_URL=${VITE_API_BASE_URL} \
+VITE_PROXY_TARGET=${VITE_PROXY_TARGET} \
+VITE_WORKER_URL=${VITE_WORKER_URL} \
+VITE_GOOGLE_MAPS_API_KEY=${VITE_GOOGLE_MAPS_API_KEY} \
+npm run build
 
 EXPOSE 5173
 

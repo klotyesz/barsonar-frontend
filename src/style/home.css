@@ -561,6 +561,87 @@
   line-height: 1.7;
 }
 
+/* Custom InfoWindow */
+.custom-info-window {
+  background: var(--page-bg-card);
+  color: var(--page-text);
+  border: 1px solid var(--page-border);
+  border-radius: 12px;
+  padding: 1.2rem 1.4rem;
+  min-width: 220px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  position: relative;
+}
+.custom-info-window h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: var(--page-accent);
+  padding-right: 20px;
+}
+.custom-info-window p.description {
+  font-size: 0.88rem;
+  margin-bottom: 0.8rem;
+  color: var(--page-text-muted);
+}
+.custom-info-window .walking-info {
+  font-size: 0.85rem;
+  margin-bottom: 0.6rem;
+  color: var(--page-text-muted);
+}
+.custom-info-window a.page-btn-primary {
+  display: block;
+  text-align: center;
+  background: var(--page-accent);
+  color: #1a1a2e !important;
+  padding: 0.6rem 0;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+.custom-info-window a.page-btn-primary:hover {
+  opacity: 0.9;
+}
+.custom-info-window-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--page-text-soft);
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  z-index: 10;
+  padding: 0;
+}
+.custom-info-window-close:hover {
+  color: #fff;
+}
+
+/* Hide default InfoWindow white background, tail, and close button */
+.gm-style-iw-c {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+.gm-style-iw-t::after {
+  display: none !important;
+}
+
+.gm-style-iw-d {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+.gm-ui-hover-effect {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
   .page-hero {
     min-height: 88vh;

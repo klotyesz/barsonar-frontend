@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import ReactDOMServer from "react-dom/server";
+import CustomInfoWindow from "./CustomInfoWindow";
 
 declare global {
   interface Window {
@@ -7,13 +9,19 @@ declare global {
   }
 }
 
-const BarsMap = () => {
+type BarsMapProps = {
+  onFullScreenChange?: (fullScreen: boolean) => void;
+};
+
+const BarsMap = ({ onFullScreenChange }: BarsMapProps) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [showSearchButton, setShowSearchButton] = useState(false);
+  const [mapFullScreen, setMapFullScreen] = useState(false);
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
   const [searching, setSearching] = useState(false);
   const userLocationRef = useRef<{ lat: number; lng: number } | null>(null);
   const infoWindowRef = useRef<any>(null);
@@ -33,6 +41,7 @@ const BarsMap = () => {
       const infoWindow =
         infoWindowRef.current ?? new window.google.maps.InfoWindow();
       infoWindowRef.current = infoWindow;
+      (window as any).closeMapInfoWindow = () => infoWindow.close();
 
       const runSearch = (request: any) =>
         new Promise<any[]>((resolve) => {
@@ -98,14 +107,16 @@ const BarsMap = () => {
 
             let walkingHtml = `<div style="font-size:12px;color:#aaa;margin-top:6px">Számítás...</div>`;
 
-            const baseContent = `<div style="font-size:14px;font-weight:600;color:#f0f0f0">${
-              place.name ?? "Bar"
-            }</div>`;
-            const buttonHtml = `<br><button onclick="window.location.href='/bar/${place.place_id}'" style="background:#f5a623;color:#1a1a2e;border:none;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;width:100%">Információ</button>`;
-
-            infoWindow.setContent(
-              `<div style="background:#1a1a2e;padding:10px 12px;border-radius:8px;min-width:160px">${baseContent}${walkingHtml}${buttonHtml}</div>`,
+            const content = ReactDOMServer.renderToString(
+              <CustomInfoWindow
+                title={place.name ?? "Bar"}
+                description={place.vicinity ?? ""}
+                buttonText="Információ"
+                buttonLink={`/bar/${place.place_id}`}
+                walkingInfo={walkingHtml}
+              />,
             );
+            infoWindow.setContent(content);
             infoWindow.open({ anchor: marker, map });
 
             if (userLocationRef.current) {
@@ -126,15 +137,23 @@ const BarsMap = () => {
                     response?.rows?.[0]?.elements?.[0]?.status === "OK"
                   ) {
                     const duration = response.rows[0].elements[0].duration.text;
-                    const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${destLat},${destLng}&travelmode=walking`;
+                    const mapsUrl = `https://www.google.com/maps/dir/?api=1\u0026origin=${origin.lat},${origin.lng}\u0026destination=${destLat},${destLng}\u0026travelmode=walking`;
 
-                    walkingHtml = `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:#f5a623;text-decoration:none;display:inline-block;margin-top:6px;cursor:pointer">${duration} séta</a>`;
+                    walkingHtml = `\u003ca href=\"${mapsUrl}\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"font-size:12px;color:#f5a623;text-decoration:none;display:inline-block;margin-top:6px;cursor:pointer\"\u003e${duration} séta\u003c/a\u003e`;
                   } else {
-                    walkingHtml = `<div style="font-size:12px;color:#888;margin-top:6px">Sétatávolság nem elérhető</div>`;
+                    walkingHtml = `\u003cdiv style=\"font-size:12px;color:#888;margin-top:6px\"\u003eSétatávolság nem elérhető\u003c/div\u003e`;
                   }
-                  infoWindow.setContent(
-                    `<div style="background:#1a1a2e;padding:10px 12px;border-radius:8px;min-width:160px">${baseContent}${walkingHtml}${buttonHtml}</div>`,
+                  // Re-render the custom info window with updated walkingInfo
+                  const updatedContent = ReactDOMServer.renderToString(
+                    <CustomInfoWindow
+                      title={place.name ?? "Bar"}
+                      description={place.vicinity ?? ""}
+                      buttonText="Információ"
+                      buttonLink={`/bar/${place.place_id}`}
+                      walkingInfo={walkingHtml}
+                    />,
                   );
+                  infoWindow.setContent(updatedContent);
                 },
               );
             }
@@ -148,6 +167,37 @@ const BarsMap = () => {
     },
     [],
   );
+
+  useEffect(() => {
+    const check = () =>
+      setIsMobileOrTablet(
+        window.matchMedia("(max-width: 1024px)").matches ||
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent,
+          ) ||
+          "ontouchstart" in window,
+      );
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
+    onFullScreenChange?.(mapFullScreen);
+  }, [mapFullScreen, onFullScreenChange]);
+
+  useEffect(() => {
+    if (!mapFullScreen) return;
+    document.body.style.overflow = "hidden";
+    const map = mapInstanceRef.current;
+    const t = setTimeout(() => {
+      if (map) window.google?.maps?.event?.trigger(map, "resize");
+    }, 100);
+    return () => {
+      document.body.style.overflow = "";
+      clearTimeout(t);
+    };
+  }, [mapFullScreen]);
 
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -233,6 +283,8 @@ const BarsMap = () => {
         const map = new window.google.maps.Map(mapRef.current, {
           center,
           zoom: 15,
+          mapTypeControl: false,
+          mapTypeId: window.google.maps.MapTypeId.ROADMAP,
           styles: [
             { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
             {
@@ -345,6 +397,10 @@ const BarsMap = () => {
 
         searchBars(map, center);
 
+        map.addListener("click", () => {
+          infoWindowRef.current?.close();
+        });
+
         let moveTimeout: ReturnType<typeof setTimeout>;
         moveListenerRef.current = map.addListener("idle", () => {
           clearTimeout(moveTimeout);
@@ -396,6 +452,23 @@ const BarsMap = () => {
     );
   }
 
+  const mapHeight = isMobileOrTablet && !mapFullScreen ? 220 : "70vh";
+  const mapContainerStyle: React.CSSProperties = mapFullScreen
+    ? {
+        position: "fixed",
+        inset: 0,
+        zIndex: 9999,
+        width: "100%",
+        height: "100%",
+        background: "#1a1a2e",
+      }
+    : {
+        position: "relative",
+        height: mapHeight,
+        width: "100%",
+        cursor: isMobileOrTablet ? "pointer" : undefined,
+      };
+
   return (
     <div className="container-fluid mt-3" style={{ position: "relative" }}>
       {loading && (
@@ -403,7 +476,7 @@ const BarsMap = () => {
           style={{
             position: "absolute",
             inset: 0,
-            height: "70vh",
+            height: mapHeight,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -417,33 +490,116 @@ const BarsMap = () => {
           />
         </div>
       )}
-      {showSearchButton && (
-        <button
-          onClick={handleSearchThisArea}
-          disabled={searching}
+      <div
+        style={mapContainerStyle}
+        onClick={
+          isMobileOrTablet && !mapFullScreen && !loading
+            ? () => setMapFullScreen(true)
+            : undefined
+        }
+        role={isMobileOrTablet && !mapFullScreen ? "button" : undefined}
+        tabIndex={isMobileOrTablet && !mapFullScreen ? 0 : undefined}
+        onKeyDown={
+          isMobileOrTablet && !mapFullScreen
+            ? (e) => e.key === "Enter" && setMapFullScreen(true)
+            : undefined
+        }
+      >
+        {showSearchButton && !(isMobileOrTablet && !mapFullScreen) && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSearchThisArea();
+            }}
+            disabled={searching}
+            style={{
+              position: "absolute",
+              top: 16,
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 10001,
+              background: "#f5a623",
+              color: "#1a1a2e",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "24px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
+              transition: "opacity 0.2s",
+              opacity: searching ? 0.6 : 1,
+            }}
+          >
+            {searching ? "Keresés..." : "Keresés ezen a területen"}
+          </button>
+        )}
+        {mapFullScreen && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setMapFullScreen(false);
+            }}
+            aria-label="Bezárás"
+            style={{
+              position: "absolute",
+              top: 16,
+              right: 16,
+              zIndex: 10001,
+              width: 44,
+              height: 44,
+              borderRadius: "50%",
+              background: "rgba(26,26,46,0.9)",
+              border: "none",
+              color: "#fff",
+              fontSize: 24,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
+            }}
+          >
+            ×
+          </button>
+        )}
+        <div
           style={{
-            position: "absolute",
-            top: 16,
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 10,
-            background: "#f5a623",
-            color: "#1a1a2e",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "24px",
-            fontSize: "14px",
-            fontWeight: 700,
-            cursor: "pointer",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.4)",
-            transition: "opacity 0.2s",
-            opacity: searching ? 0.6 : 1,
+            height: "100%",
+            width: "100%",
+            pointerEvents: isMobileOrTablet && !mapFullScreen ? "none" : "auto",
           }}
-        >
-          {searching ? "Keresés..." : "Keresés ezen a területen"}
-        </button>
-      )}
-      <div style={{ height: "70vh", width: "100%" }} ref={mapRef} />
+          ref={mapRef}
+        />
+        {isMobileOrTablet && !mapFullScreen && !loading && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 5,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgba(0,0,0,0.4)",
+              pointerEvents: "none",
+            }}
+          >
+            <span
+              style={{
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: 600,
+                textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+                textAlign: "center",
+                padding: "0 20px",
+              }}
+            >
+              Érintsd a térképet a teljes képernyős nézethez
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

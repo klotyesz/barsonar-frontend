@@ -5,13 +5,11 @@ import { logout as apiLogout, me } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router";
 import type { User } from "../interfaces/User";
-import SettingsModal from "./SettingsModal";
 
 export function ProfileWidget() {
   const { logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User>();
-  const [showSettings, setShowSettings] = useState(false);
 
   const handleLogout = async () => {
     await apiLogout();
@@ -57,25 +55,20 @@ export function ProfileWidget() {
           >
             Barátok
           </Link>
-          <button
+          <Link
+            to="/settings"
             className="profile-btn"
-            onClick={() => {
-              setOpen(false);
-              setShowSettings(true);
-            }}
+            style={{ textDecorationLine: "none" }}
+            onClick={() => setOpen(false)}
           >
             Beállítások
-          </button>
+          </Link>
 
           <button className="profile-btn logout" onClick={handleLogout}>
             Kijelentkezés
           </button>
         </div>
       </div>
-      <SettingsModal
-        show={showSettings}
-        onHide={() => setShowSettings(false)}
-      />
     </>
   );
 }

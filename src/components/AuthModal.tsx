@@ -72,7 +72,7 @@ function AuthModal({ show, onHide }: AuthModalProps) {
   }
 
   return (
-    <Modal show={show} onHide={onHide} centered contentClassName="auth-modal">
+    <Modal show={show} onHide={onHide} centered contentClassName="auth-modal bg-dark text-light">
       <Modal.Body className="p-4">
         {/* Logo */}
         <div className="text-center mb-4">
@@ -83,7 +83,7 @@ function AuthModal({ show, onHide }: AuthModalProps) {
                 Jelentkezz be frissen létrehozott fiókodba!
               </h5>
               :
-              <h5 className="fw-bold text-orange mb-0">BarSonar</h5>
+              <h5 className="fw-bold text-orange mb-0"></h5>
           }
         </div>
 
@@ -93,16 +93,18 @@ function AuthModal({ show, onHide }: AuthModalProps) {
             <Nav.Link
               active={mode === "login"}
               onClick={() => setMode("login")}
+              className="text-warning font-weight-bold"
             >
-              Login
+              Bejelentkezés
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link
               active={mode === "signup"}
               onClick={() => setMode("signup")}
+              className="text-warning font-weight-bold"
             >
-              Sign Up
+              Regisztráció
             </Nav.Link>
           </Nav.Item>
         </Nav>
@@ -111,11 +113,11 @@ function AuthModal({ show, onHide }: AuthModalProps) {
         <Form onSubmit={handleSubmit}>
           {mode === "signup" && (
             <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Felhasználónév</Form.Label>
               <Form.Control
                 required
                 type="text"
-                placeholder="Your name"
+                placeholder="Felhasználónév"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
@@ -127,14 +129,14 @@ function AuthModal({ show, onHide }: AuthModalProps) {
             <Form.Control
               required
               type="email"
-              placeholder="you@example.com"
+              placeholder="pelda@pelda.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Group>
 
           <Form.Group className="mb-4">
-            <Form.Label>Password</Form.Label>
+            <Form.Label>Jelszó</Form.Label>
             <Form.Control
               required
               type="password"
@@ -147,7 +149,6 @@ function AuthModal({ show, onHide }: AuthModalProps) {
 
           {mode === "signup" && (
             <Form.Group className="mb-3">
-              <Form.Label>Kor</Form.Label>
               <Form.Label>Add meg a korod hogy nekedvaló helyeket ajánlhassunk</Form.Label>
               <Form.Control
                 type="number"
@@ -160,8 +161,8 @@ function AuthModal({ show, onHide }: AuthModalProps) {
 
           {err ? <Form.Label className="mb-4">{err}</Form.Label> : <></>}
 
-          <Button className="w-100 btn-orange" type="submit">
-            {mode === "login" ? "Login" : "Create Account"}
+          <Button className="w-100 btn-warning" type="submit">
+            {mode === "login" ? "Bejelentkezés" : "Fiók létrehozása"}
           </Button>
         </Form>
       </Modal.Body>

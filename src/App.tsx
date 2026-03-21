@@ -5,6 +5,7 @@ import { Bars } from "./pages/BarsPage";
 import { Popular } from "./pages/PopularPage";
 import { Friends } from "./pages/FriendsPage";
 import { News } from "./pages/NewsPage";
+import { SettingsPage } from "./pages/SettingsPage";
 import { BarDetailsPage } from "./pages/BarDetailsPage";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/popular" element={<Popular />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/news" element={<News />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/bar/:barId" element={<BarDetailsPage />} />
         </Routes>
       </div>

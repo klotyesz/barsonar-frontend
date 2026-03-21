@@ -1,5 +1,5 @@
 import { Container, Nav, Navbar, Button, Image } from "react-bootstrap";
-import {  NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import AuthModal from "./AuthModal";
 import { useAuth } from "../context/AuthContext";

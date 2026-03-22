@@ -151,8 +151,10 @@ export function Friends() {
                 <p className="friends-message">Betöltés...</p>
               ) : activeTab === "friends" ? (
                 <div className="friends-list">
+                  <br />
                   {friends.length > 0 ? (
                     friends.map((f) => (
+                      
                       <div key={f.id} className="friends-card">
                         <div className="friends-card-body">
                           <span className="friends-name">{f.userName}</span>
@@ -167,6 +169,7 @@ export function Friends() {
                 </div>
               ) : (
                 <div className="friends-list">
+                  <br />
                   {pending.length > 0 ? (
                     pending.map((p) => (
                       <div key={p.id} className="friends-card friends-card-pending">

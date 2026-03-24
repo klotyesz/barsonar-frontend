@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { IconUser, IconHeart, IconUsers, IconSearch, IconPlus, IconX } from "@tabler/icons-react";
+import {
+  IconUser,
+  IconHeart,
+  IconUsers,
+  IconSearch,
+  IconPlus,
+  IconX,
+} from "@tabler/icons-react";
 import Menu from "../components/Menu";
 import ChatWidget from "../components/ChatWidget";
 import { Footer } from "../components/Footer";
@@ -105,7 +112,9 @@ export function SettingsPage() {
     setUserNameSaving(true);
     setUserNameErr("");
     try {
-      const res = await updateUser(Number(userId), { userName: userName.trim() });
+      const res = await updateUser(Number(userId), {
+        userName: userName.trim(),
+      });
       if (res?.statusCode >= 400 || res?.error) {
         setUserNameErr(res?.message || "Sikertelen mentés");
       } else {
@@ -196,7 +205,9 @@ export function SettingsPage() {
       <div className="page-layout">
         <Menu />
         <Container className="py-5">
-          <p className="text-muted">Jelentkezz be a beállítások megtekintéséhez.</p>
+          <p className="text-muted">
+            Jelentkezz be a beállítások megtekintéséhez.
+          </p>
         </Container>
         <Footer />
       </div>
@@ -258,7 +269,9 @@ export function SettingsPage() {
                   <Button
                     type="submit"
                     className="page-btn-primary"
-                    disabled={userNameSaving || userName.trim() === user?.userName}
+                    disabled={
+                      userNameSaving || userName.trim() === user?.userName
+                    }
                   >
                     {userNameSaving ? "Mentés..." : "Mentés"}
                   </Button>
@@ -365,12 +378,10 @@ export function SettingsPage() {
                     <p className="settings-label">Keresési eredmények:</p>
                     <div className="settings-friends-list">
                       {searchResults.map((u) => (
-                        <div
-                          key={u.id}
-                          className="settings-friend-row"
-                        >
+                        <div key={u.id} className="settings-friend-row">
                           <span>{u.userName}</span>
-                          {u.id !== Number(userId) && !friendIds.includes(u.id) ? (
+                          {u.id !== Number(userId) &&
+                          !friendIds.includes(u.id) ? (
                             <Button
                               variant="outline"
                               size="sm"
@@ -404,9 +415,7 @@ export function SettingsPage() {
                   </p>
                 )}
 
-                {friendErr && (
-                  <p className="settings-err mt-2">{friendErr}</p>
-                )}
+                {friendErr && <p className="settings-err mt-2">{friendErr}</p>}
               </div>
             </Col>
           </Row>

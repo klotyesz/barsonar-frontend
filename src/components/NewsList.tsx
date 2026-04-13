@@ -9,7 +9,7 @@ const NewsList = () => {
   const [news, setNews] = useState<News[]>([]);
 
   const fetchNews = async () => {
-    const response = await fetch(`${API_BASE_URL}/place/allNews`);
+    const response = await fetch(`${API_BASE_URL}/news/all`);
     const data: News[] = await response.json();
     setNews(data);
   };

@@ -81,3 +81,17 @@ export async function dealWithFriendRequest(
   });
   return res.json();
 }
+
+export async function getRecommendationsByInterest() {
+  const res = await fetch(`${API_BASE_URL}/user/recommendation`, {
+    credentials: "include",
+  });
+  return res.json();
+}
+
+export async function getRecommendationsByAge() {
+  const res = await fetch(`${API_BASE_URL}/user/recommendation/age`, {
+    credentials: "include",
+  });
+  return res.json();
+}

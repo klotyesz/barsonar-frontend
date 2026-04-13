@@ -33,7 +33,7 @@ function Menu() {
               <Nav.Link as={NavLink} to="/bars">
                 Térkép
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/popular">
+              <Nav.Link as={NavLink} to="/recommendations">
                 Ajánlott bárok
               </Nav.Link>
               <Nav.Link as={NavLink} to="/news">

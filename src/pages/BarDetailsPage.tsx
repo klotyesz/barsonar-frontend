@@ -51,7 +51,10 @@ interface OurComment {
   id: number;
   commentText: string;
   rating: number;
-  userID: number;
+  user: {
+    id: number;
+    userName: string;
+  }
   createdAt: string;
 }
 
@@ -612,12 +615,12 @@ export const BarDetailsPage = () => {
                                       <div className="bar-review-header">
                                         <img
                                           src="/default_avatar.png"
-                                          alt={`Felhasználó #${c.userID}`}
+                                          alt={`Felhasználó #${c.user.id}`}
                                           className="bar-review-avatar"
                                         />
                                         <div>
                                           <div className="bar-review-author">
-                                            Felhasználó #{c.userID}
+                                            {c.user.userName}
                                           </div>
                                           <StarRating rating={c.rating} />
                                         </div>

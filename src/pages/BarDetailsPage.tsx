@@ -17,6 +17,7 @@ import {
   IconClock,
   IconMapPin,
   IconMessageCircle,
+  IconNews,
   IconPhone,
   IconPhoto,
   IconSend,
@@ -56,6 +57,13 @@ interface OurComment {
     userName: string;
   }
   createdAt: string;
+}
+
+interface BarNews {
+  id: number;
+  text: string;
+  placeID: number;
+  userID: number;
 }
 
 const StarRating = ({ rating, max = 5 }: { rating: number; max?: number }) => {
@@ -123,6 +131,12 @@ export const BarDetailsPage = () => {
   const [selectedPhotos, setSelectedPhotos] = useState<File[]>([]);
   const [ourPhotos, setOurPhotos] = useState<PlacePhoto[]>([]);
   const [photoUploadSuccess, setPhotoUploadSuccess] = useState(false);
+
+  const [news, setNews] = useState<BarNews[]>([]);
+  const [newsLoading, setNewsLoading] = useState(false);
+  const [newsText, setNewsText] = useState("");
+  const [submittingNews, setSubmittingNews] = useState(false);
+  const [newsSuccess, setNewsSuccess] = useState(false);
 
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -226,6 +240,55 @@ export const BarDetailsPage = () => {
       .then((data) => setOurPhotos(Array.isArray(data) ? data : []))
       .catch(() => setOurPhotos([]));
   }, [dbPlaceId]);
+
+  useEffect(() => {
+    if (!dbPlaceId) return;
+    setNewsLoading(true);
+    fetch(`${API_BASE_URL}/place/${dbPlaceId}/news`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => setNews(Array.isArray(data) ? data : []))
+      .catch(() => setNews([]))
+      .finally(() => setNewsLoading(false));
+  }, [dbPlaceId]);
+
+  const submitNews = async () => {
+    if (!newsText.trim() || newsText.trim().length < 10 || !userId) return;
+    setSubmittingNews(true);
+    try {
+      let resolvedPlaceId = dbPlaceId;
+
+      if (!resolvedPlaceId) {
+        const placeRes = await fetch(`${API_BASE_URL}/place`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            googleplaceID: barId,
+            name: bar.name,
+            address: bar.formatted_address ?? "",
+          }),
+        });
+        if (!placeRes.ok) return;
+        const newPlace = await placeRes.json();
+        resolvedPlaceId = newPlace.id;
+        setDbPlaceId(newPlace.id);
+      }
+
+      const res = await fetch(`${API_BASE_URL}/place/${resolvedPlaceId}/news`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ text: newsText }),
+      });
+      if (res.ok) {
+        setNewsText("");
+        setNewsSuccess(true);
+        setTimeout(() => setNewsSuccess(false), 4000);
+      }
+    } finally {
+      setSubmittingNews(false);
+    }
+  };
 
   const submitComment = async () => {
     if (!commentText.trim() || commentRating === 0 || !userId) return;
@@ -690,6 +753,72 @@ export const BarDetailsPage = () => {
                         </Tab.Pane>
                       </Tab.Content>
                     </Tab.Container>
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              <Col xs={12}>
+                <Card className="bar-details-card">
+                  <Card.Body>
+                    <h5 className="bar-section-title">
+                      <IconNews size={18} className="section-icon" /> Hírek
+                    </h5>
+                    <hr className="bar-divider" />
+
+                    {isAuthenticated && (
+                      <div className="bar-comment-form mb-4">
+                        <div className="bar-comment-input-row">
+                          <Form.Control
+                            as="textarea"
+                            rows={2}
+                            placeholder="Írj hírt erről a helyről... (min. 10 karakter)"
+                            value={newsText}
+                            onChange={(e) => setNewsText(e.target.value)}
+                            className="bar-comment-textarea"
+                          />
+                          <button
+                            className="bar-send-btn"
+                            onClick={submitNews}
+                            disabled={submittingNews || newsText.trim().length < 10}
+                          >
+                            {submittingNews ? (
+                              <Spinner size="sm" animation="border" />
+                            ) : (
+                              <IconSend size={18} />
+                            )}
+                          </button>
+                        </div>
+                        {newsSuccess && (
+                          <p className="bar-upload-success">
+                            Hír elküldve! Admin jóváhagyás után megjelenik.
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {!isAuthenticated && (
+                      <p className="bar-empty-state mb-3">
+                        Jelentkezz be hír írásához.
+                      </p>
+                    )}
+
+                    {newsLoading ? (
+                      <div className="text-center py-3">
+                        <Spinner animation="border" variant="warning" size="sm" />
+                      </div>
+                    ) : news.length > 0 ? (
+                      <div className="bar-news-list">
+                        {news.slice().sort((a, b) => b.id - a.id).map((item) => (
+                          <div key={item.id} className="bar-news-item">
+                            <p className="bar-news-text">{item.text}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="bar-empty-state">
+                        Még nincsenek hírek erről a helyről.
+                      </p>
+                    )}
                   </Card.Body>
                 </Card>
               </Col>

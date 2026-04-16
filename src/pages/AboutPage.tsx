@@ -54,13 +54,15 @@ const team = [
     initials: "SG",
     name: "Sarkadi Gábor",
     role: "Fejlesztő & Alapító",
-    bio: "Frontend fejlesztő, a BarSonar frontendjének megvalósítója.",
+    bio: "Frontend fejlesztő, a BarSonar frontendjének és design-jának megvalósítója.",
+    github: "https://github.com/klotyesz",
   },
   {
     initials: "KA",
     name: "Kobela András",
     role: "Fejlesztő & Alapító",
-    bio: "Backend fejlesztő, a BarSonar backendjének tervezője és megvalósítója.",
+    bio: "Backend fejlesztő, a BarSonar backendjének és admin felületének tervezője és megvalósítója.",
+    github: "https://github.com/jaaajaaaja",
   },
 
 ];
@@ -74,7 +76,7 @@ const timeline = [
   {
     year: "2026 Január",
     heading: "Fejlesztés kezdete",
-    desc: "React + Vite frontend, NestJS backend és MySQL adatbázis – a stack összeállt.",
+    desc: "React + Vite frontend, NestJS backend és MySQL adatbázis - a stack összeállt.",
   },
   {
     year: "2026 Február",
@@ -84,7 +86,7 @@ const timeline = [
   {
     year: "2026 Március",
     heading: "Publikus béta",
-    desc: "Az app megnyílik a nyilvánosság előtt – és te épp most vagy az első felhasználók között!",
+    desc: "Az app megnyílik a nyilvánosság előtt - és te épp most vagy az első felhasználók között!",
   },
 ];
 
@@ -220,7 +222,7 @@ export function About() {
                       Modern technológiai verem
                     </h3>
                     <p className="page-card-text">
-                      A BarSonar a legfrissebb webfejlesztési eszközökre épül –
+                      A BarSonar a legfrissebb webfejlesztési eszközökre épül -
                       a gyorsaság, biztonság és skálázhatóság jegyében.
                     </p>
                   </div>
@@ -246,12 +248,20 @@ export function About() {
               <Col xs={12}>
                 <div className="about-team-grid">
                   {team.map((m) => (
-                    <div key={m.name} className="about-team-card">
-                      <div className="about-team-avatar">{m.initials}</div>
-                      <p className="about-team-name">{m.name}</p>
-                      <p className="about-team-role">{m.role}</p>
-                      <p className="about-team-bio">{m.bio}</p>
-                    </div>
+                    <a
+                      key={m.name}
+                      href={m.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="about-team-link"
+                    >
+                      <div className="about-team-card">
+                        <div className="about-team-avatar">{m.initials}</div>
+                        <p className="about-team-name">{m.name}</p>
+                        <p className="about-team-role">{m.role}</p>
+                        <p className="about-team-bio">{m.bio}</p>
+                      </div>
+                    </a>
                   ))}
                 </div>
               </Col>
@@ -271,7 +281,7 @@ export function About() {
                     chatbotot és találd meg a tökéletes helyet már ma este.
                   </p>
                   <Link to="/bars" className="page-btn-primary">
-                    Bárokat felfedezek
+                    Felfedezem a bárokat
                     <IconArrowRight
                       size={16}
                       stroke={2.5}

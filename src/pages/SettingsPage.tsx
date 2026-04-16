@@ -29,6 +29,16 @@ const INTERESTS = [
   "bowling_alley",
 ];
 
+const INTEREST_LABELS: Record<string, string> = {
+  bar: "Bár",
+  pub: "Pub",
+  nightclub: "Éjszakai klub",
+  dance_club: "Táncklub",
+  wine_bar: "Borozó",
+  karaoke: "Karaoke",
+  bowling_alley: "Bowling",
+};
+
 interface InterestItem {
   id: number;
   interest: string;
@@ -247,7 +257,7 @@ export function SettingsPage() {
                           className="interest-chip interest-chip-remove"
                           onClick={() => handleRemoveInterest(item.id)}
                         >
-                          {item.interest}
+                          {INTEREST_LABELS[item.interest] || item.interest}
                           <IconX size={14} stroke={2} />
                         </div>
                       ))}
@@ -274,7 +284,7 @@ export function SettingsPage() {
                           : "pointer",
                       }}
                     >
-                      {interest}
+                      {INTEREST_LABELS[interest] || interest}
                     </div>
                   ))}
                 </div>

@@ -245,6 +245,13 @@
   gap: 1.25rem;
 }
 
+.about-team-link {
+  text-decoration: none !important;
+  color: inherit !important;
+  display: block;
+  cursor: pointer;
+}
+
 .about-team-card {
   background: var(--page-bg-card);
   border: 1px solid var(--page-border);

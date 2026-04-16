@@ -93,9 +93,9 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--page-accent);
-  color: #0d0e0e;
-  border: none;
+  background: var(--page-accent) !important;
+  color: #0d0e0e !important;
+  border: none !important;
   border-radius: 12px;
   padding: 0.75em 1.8em;
   font-size: 0.95rem;
@@ -107,10 +107,10 @@
 }
 
 .page-btn-primary:hover {
-  background: var(--page-accent-hover);
+  background: var(--page-accent-hover) !important;
   transform: translateY(-2px);
   box-shadow: 0 6px 28px rgba(225, 173, 1, 0.4);
-  color: #0d0e0e;
+  color: #0d0e0e !important;
 }
 
 .page-btn-ghost {

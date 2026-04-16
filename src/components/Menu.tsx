@@ -36,9 +36,6 @@ function Menu() {
               <Nav.Link as={NavLink} to="/recommendations">
                 Ajánlott bárok
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/news">
-                Hírek
-              </Nav.Link>
             </Nav>
 
             {/* Login/Logout button */}

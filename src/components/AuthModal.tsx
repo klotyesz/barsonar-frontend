@@ -59,15 +59,14 @@ function AuthModal({ show, onHide }: AuthModalProps) {
 
         if (res && res.success) {
           empty()
+          setMode("login")
+          setSuccessfullCreate(true)
         } else {
-          setErr(res)
+          setErr(res?.message || res?.error || "Regisztráció sikertelen");
         }
-
-        setMode("login")
-        setSuccessfullCreate(true)
-      }      
+      }
     } catch (error: any) {
-      setErr(error)
+      setErr(error?.message || "Hiba történt")
     }
   }
 

@@ -166,3 +166,262 @@
   font-size: 0.9rem;
   margin-bottom: 1rem;
 }
+
+/* ── Tabs row with Ki fizet button ── */
+.friends-tabs-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.friends-tabs-row .friends-tabs {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.pay-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--page-accent);
+  color: #0d0e0e;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.48rem 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.12s;
+  white-space: nowrap;
+  margin-bottom: 2px;
+}
+.pay-trigger-btn:hover {
+  background: var(--page-accent-hover);
+  transform: translateY(-1px);
+}
+
+/* ── Pay overlay ── */
+.pay-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(0, 0, 0, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pay-fade-in 0.15s ease;
+}
+
+@keyframes pay-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.pay-modal {
+  background: #1a1c1c;
+  border: 1px solid #2e3030;
+  border-radius: 16px;
+  width: min(420px, 92vw);
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 12px 60px rgba(0, 0, 0, 0.7);
+  animation: pay-slide-up 0.18s ease;
+}
+
+@keyframes pay-slide-up {
+  from { transform: translateY(18px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.pay-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pay-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--page-accent);
+}
+
+.pay-modal-close {
+  background: transparent;
+  border: 1px solid #2e3030;
+  border-radius: 50%;
+  color: #9aa0a6;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.14s, color 0.14s;
+}
+.pay-modal-close:hover {
+  background: #2e3030;
+  color: #eaeaea;
+}
+
+.pay-modal-hint {
+  font-size: 0.82rem;
+  color: #7a8088;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Friend checkboxes ── */
+.pay-friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.pay-friend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: #252828;
+  border: 1px solid #2e3030;
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.14s, background 0.14s;
+  text-align: left;
+  width: 100%;
+}
+.pay-friend-row:hover:not(:disabled) {
+  border-color: var(--page-accent-border);
+  background: #2b2d2d;
+}
+.pay-friend-row--checked {
+  border-color: var(--page-accent) !important;
+  background: rgba(253, 126, 20, 0.08) !important;
+}
+.pay-friend-row:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pay-friend-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid #3a3d3d;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.14s, border-color 0.14s;
+}
+.pay-friend-check--on {
+  background: var(--page-accent);
+  border-color: var(--page-accent);
+  color: #0d0e0e;
+}
+
+.pay-friend-name {
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: #eaeaea;
+}
+
+/* ── Spin stage ── */
+.pay-stage {
+  background: #101212;
+  border: 1px solid #2e3030;
+  border-radius: 12px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 1rem;
+}
+
+.pay-stage-placeholder {
+  font-size: 2rem;
+  color: #3a3d3d;
+  font-weight: 700;
+}
+
+.pay-stage-name {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.pay-stage-name--spin {
+  color: #fd7e14;
+  animation: pay-flicker 0.08s steps(1) infinite;
+}
+
+@keyframes pay-flicker {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+.pay-stage-name--winner {
+  color: #ffd166;
+  animation: pay-winner-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pay-winner-pop {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.pay-stage-label {
+  font-size: 0.88rem;
+  color: #9aa0a6;
+  letter-spacing: 0.04em;
+}
+
+/* ── Spin button ── */
+.pay-spin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: var(--page-accent);
+  color: #0d0e0e;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+.pay-spin-btn:hover:not(:disabled) {
+  background: var(--page-accent-hover);
+}
+.pay-spin-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pay-warn {
+  font-size: 0.8rem;
+  color: #7a8088;
+  text-align: center;
+  margin: 0;
+}

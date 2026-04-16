@@ -4,7 +4,6 @@ import { About } from "./pages/AboutPage";
 import { Bars } from "./pages/BarsPage";
 import { RecommendationPage } from "./pages/RecommendationPage";
 import { Friends } from "./pages/FriendsPage";
-import { News } from "./pages/NewsPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { BarDetailsPage } from "./pages/BarDetailsPage";
 
@@ -18,7 +17,6 @@ function App() {
           <Route path="/bars" element={<Bars />} />
           <Route path="/recommendations" element={<RecommendationPage />} />
           <Route path="/friends" element={<Friends />} />
-          <Route path="/news" element={<News />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/bar/:barId" element={<BarDetailsPage />} />
         </Routes>

@@ -464,3 +464,111 @@
   margin: 0;
   line-height: 1.6;
 }
+
+/* ── Lightbox ── */
+.bar-gallery-item--clickable {
+  cursor: zoom-in;
+}
+
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: lightbox-fade-in 0.18s ease;
+}
+
+@keyframes lightbox-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.lightbox-content {
+  max-width: 90vw;
+  max-height: 88vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.8);
+  animation: lightbox-zoom-in 0.18s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@keyframes lightbox-zoom-in {
+  from { transform: scale(0.94); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 1.1rem;
+  right: 1.3rem;
+  background: rgba(30, 32, 32, 0.85);
+  border: 1px solid #3a3d3d;
+  border-radius: 50%;
+  color: #eaeaea;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1101;
+  transition: background 0.15s, color 0.15s;
+}
+.lightbox-close:hover {
+  background: #fd7e14;
+  color: #101212;
+  border-color: #fd7e14;
+}
+
+.lightbox-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(30, 32, 32, 0.75);
+  border: 1px solid #3a3d3d;
+  border-radius: 50%;
+  color: #eaeaea;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1101;
+  transition: background 0.15s, color 0.15s;
+}
+.lightbox-nav:hover {
+  background: #fd7e14;
+  color: #101212;
+  border-color: #fd7e14;
+}
+.lightbox-prev { left: 1.2rem; }
+.lightbox-next { right: 1.2rem; }
+
+.lightbox-counter {
+  position: fixed;
+  bottom: 1.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 32, 32, 0.8);
+  border: 1px solid #3a3d3d;
+  border-radius: 2em;
+  color: #eaeaea;
+  font-size: 0.82rem;
+  padding: 0.3em 1em;
+  letter-spacing: 0.06em;
+  z-index: 1101;
+}

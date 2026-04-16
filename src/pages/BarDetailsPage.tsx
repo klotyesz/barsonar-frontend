@@ -14,6 +14,8 @@ import {
 import {
   IconBrandGoogle,
   IconCamera,
+  IconChevronLeft,
+  IconChevronRight,
   IconClock,
   IconMapPin,
   IconMessageCircle,
@@ -24,6 +26,7 @@ import {
   IconStar,
   IconStarFilled,
   IconWorld,
+  IconX,
 } from "@tabler/icons-react";
 import Menu from "../components/Menu";
 import ChatWidget from "../components/ChatWidget";
@@ -137,6 +140,33 @@ export const BarDetailsPage = () => {
   const [newsText, setNewsText] = useState("");
   const [submittingNews, setSubmittingNews] = useState(false);
   const [newsSuccess, setNewsSuccess] = useState(false);
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImages, setLightboxImages] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const openLightbox = (images: string[], idx: number) => {
+    setLightboxImages(images);
+    setLightboxIndex(idx);
+    setLightboxOpen(true);
+  };
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "ArrowLeft")
+        setLightboxIndex((i) => (i - 1 + lightboxImages.length) % lightboxImages.length);
+      if (e.key === "ArrowRight")
+        setLightboxIndex((i) => (i + 1) % lightboxImages.length);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightboxOpen, lightboxImages.length]);
 
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -325,7 +355,18 @@ export const BarDetailsPage = () => {
       });
       if (res.ok) {
         const created = await res.json();
-        setOurComments((prev) => [created, ...prev]);
+        if (created && typeof created === "object" && "id" in created) {
+          setOurComments((prev) => [
+            {
+              id: created.id,
+              commentText: created.commentText ?? commentText,
+              rating: created.rating ?? commentRating,
+              user: created.user ?? { id: Number(userId), userName: "Te" },
+              createdAt: created.createdAt ?? new Date().toISOString(),
+            },
+            ...prev,
+          ]);
+        }
         setCommentText("");
         setCommentRating(0);
       }
@@ -678,12 +719,12 @@ export const BarDetailsPage = () => {
                                       <div className="bar-review-header">
                                         <img
                                           src="/default_avatar.png"
-                                          alt={`Felhasználó #${c.user.id}`}
+                                          alt={`Felhasználó #${c.user?.id ?? "?"}`}
                                           className="bar-review-avatar"
                                         />
                                         <div>
                                           <div className="bar-review-author">
-                                            {c.user.userName}
+                                            {c.user?.userName ?? "Ismeretlen"}
                                           </div>
                                           <StarRating rating={c.rating} />
                                         </div>
@@ -856,20 +897,26 @@ export const BarDetailsPage = () => {
                         <Tab.Pane eventKey="our-photos">
                           {ourPhotos.length > 0 ? (
                             <div className="bar-gallery-grid">
-                              {ourPhotos.map((photo) => (
-                                <div
-                                  key={photo.id}
-                                  className="bar-gallery-item"
-                                >
-                                  <img
-                                    src={`${PROXY_BASE_URL}/${photo.location}`}
-                                    alt={
-                                      photo.user?.userName ?? "Feltöltött fotó"
-                                    }
-                                    className="bar-gallery-img"
-                                  />
-                                </div>
-                              ))}
+                              {ourPhotos.map((photo, idx) => {
+                                const urls = ourPhotos.map(
+                                  (p) => `${PROXY_BASE_URL}/${p.location}`,
+                                );
+                                return (
+                                  <div
+                                    key={photo.id}
+                                    className="bar-gallery-item bar-gallery-item--clickable"
+                                    onClick={() => openLightbox(urls, idx)}
+                                  >
+                                    <img
+                                      src={`${PROXY_BASE_URL}/${photo.location}`}
+                                      alt={
+                                        photo.user?.userName ?? "Feltöltött fotó"
+                                      }
+                                      className="bar-gallery-img"
+                                    />
+                                  </div>
+                                );
+                              })}
                             </div>
                           ) : (
                             <p className="bar-empty-state">
@@ -881,7 +928,11 @@ export const BarDetailsPage = () => {
                           {googlePhotos.length > 0 ? (
                             <div className="bar-gallery-grid">
                               {googlePhotos.map((url, idx) => (
-                                <div key={idx} className="bar-gallery-item">
+                                <div
+                                  key={idx}
+                                  className="bar-gallery-item bar-gallery-item--clickable"
+                                  onClick={() => openLightbox(googlePhotos, idx)}
+                                >
                                   <img
                                     src={url}
                                     alt={`${bar.name} ${idx + 2}`}
@@ -919,6 +970,66 @@ export const BarDetailsPage = () => {
           </Col>
         </Row>
       </Container>
+
+      {lightboxOpen && (
+        <div
+          className="lightbox-overlay"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            className="lightbox-close"
+            onClick={() => setLightboxOpen(false)}
+            aria-label="Bezárás"
+          >
+            <IconX size={22} />
+          </button>
+
+          {lightboxImages.length > 1 && (
+            <button
+              className="lightbox-nav lightbox-prev"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex(
+                  (i) => (i - 1 + lightboxImages.length) % lightboxImages.length,
+                );
+              }}
+              aria-label="Előző"
+            >
+              <IconChevronLeft size={32} />
+            </button>
+          )}
+
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={lightboxImages[lightboxIndex]}
+              alt={`${lightboxIndex + 1} / ${lightboxImages.length}`}
+              className="lightbox-img"
+            />
+          </div>
+
+          {lightboxImages.length > 1 && (
+            <button
+              className="lightbox-nav lightbox-next"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxIndex((i) => (i + 1) % lightboxImages.length);
+              }}
+              aria-label="Következő"
+            >
+              <IconChevronRight size={32} />
+            </button>
+          )}
+
+          {lightboxImages.length > 1 && (
+            <div className="lightbox-counter">
+              {lightboxIndex + 1} / {lightboxImages.length}
+            </div>
+          )}
+        </div>
+      )}
 
       <Footer />
     </div>

@@ -180,13 +180,15 @@ export function RecommendationPage() {
                               </span>
                             )}
                           </div>
-                          <Link
-                            to={`/bar/${bar.googleplaceID}`}
-                            className="rec-btn"
-                          >
-                            Részletek
-                            <IconArrowRight size={16} stroke={2} />
-                          </Link>
+                          {bar.googleplaceID && (
+                            <Link
+                              to={`/bar/${bar.googleplaceID}`}
+                              className="rec-btn"
+                            >
+                              Részletek
+                              <IconArrowRight size={16} stroke={2} />
+                            </Link>
+                          )}
                         </div>
                       </div>
                     ))

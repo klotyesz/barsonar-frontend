@@ -47,7 +47,6 @@ export function ProfileWidget() {
         <div className="profile-divider" />
 
         <div className="profile-actions">
-          <button className="profile-btn">Kedvencek</button>
           <Link
             to="/friends"
             className="profile-btn"

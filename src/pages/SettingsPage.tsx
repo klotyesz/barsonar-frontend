@@ -3,9 +3,6 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import {
   IconUser,
   IconHeart,
-  IconUsers,
-  IconSearch,
-  IconPlus,
   IconX,
 } from "@tabler/icons-react";
 import Menu from "../components/Menu";
@@ -18,9 +15,6 @@ import {
   addInterest,
   getInterests,
   deleteInterest,
-  searchByUsername,
-  addFriend,
-  getFriends,
 } from "../api/user";
 import type { User } from "../interfaces/User";
 import "../style/settings.css";
@@ -40,10 +34,7 @@ interface InterestItem {
   interest: string;
 }
 
-interface FriendItem {
-  id: number;
-  userName: string;
-}
+
 
 export function SettingsPage() {
   const { userId } = useAuth();
@@ -57,11 +48,7 @@ export function SettingsPage() {
   const [interestSaving, setInterestSaving] = useState(false);
   const [interestErr, setInterestErr] = useState("");
 
-  const [friends, setFriends] = useState<FriendItem[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<FriendItem[]>([]);
-  const [searching, setSearching] = useState(false);
-  const [friendErr, setFriendErr] = useState("");
+
 
   useEffect(() => {
     loadProfile();
@@ -70,7 +57,6 @@ export function SettingsPage() {
   useEffect(() => {
     if (userId) {
       loadInterests();
-      loadFriends();
     }
   }, [userId]);
 
@@ -96,15 +82,7 @@ export function SettingsPage() {
     }
   };
 
-  const loadFriends = async () => {
-    try {
-      const res = await getFriends();
-      const list = Array.isArray(res) ? res : [];
-      setFriends(list);
-    } catch {
-      setFriends([]);
-    }
-  };
+
 
   const handleSaveUserName = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,37 +134,7 @@ export function SettingsPage() {
     }
   };
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-    setSearching(true);
-    setFriendErr("");
-    try {
-      const res = await searchByUsername(searchQuery.trim());
-      const list = Array.isArray(res) ? res : [];
-      setSearchResults(list);
-    } catch {
-      setSearchResults([]);
-      setFriendErr("Keresési hiba");
-    } finally {
-      setSearching(false);
-    }
-  };
 
-  const handleAddFriend = async (friendId: number) => {
-    setFriendErr("");
-    try {
-      const res = await addFriend(friendId);
-      if (res?.statusCode >= 400 || res?.error) {
-        setFriendErr(res?.message || "Nem sikerült hozzáadni");
-      } else {
-        await loadFriends();
-        setSearchResults((prev) => prev.filter((u) => u.id !== friendId));
-      }
-    } catch {
-      setFriendErr("Hiba történt");
-    }
-  };
 
   if (!user && userId) {
     return (
@@ -215,7 +163,7 @@ export function SettingsPage() {
   }
 
   const interestNames = interests.map((i) => i.interest);
-  const friendIds = friends.map((f) => f.id);
+
 
   return (
     <div className="page-layout">
@@ -340,82 +288,6 @@ export function SettingsPage() {
                 >
                   {interestSaving ? "Mentés..." : "Hozzáadás"}
                 </Button>
-              </div>
-            </Col>
-
-            <Col xs={12}>
-              <div className="settings-card">
-                <div className="page-card-icon">
-                  <IconUsers size={28} stroke={1.6} />
-                </div>
-                <h2 className="page-card-title">Barátok</h2>
-                <p className="page-card-text mb-3">
-                  Keress felhasználókat és add hozzá barátaidhoz.
-                </p>
-
-                <Form onSubmit={handleSearch} className="mb-4">
-                  <div className="d-flex gap-2 text-light">
-                    <Form.Control
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Felhasználónév keresése..."
-                      className="settings-input grow"
-                    />
-                    <Button
-                      type="submit"
-                      className="page-btn-primary d-flex align-items-center gap-2"
-                      disabled={searching}
-                    >
-                      <IconSearch size={18} stroke={2} />
-                      {searching ? "Keresés..." : "Keresés"}
-                    </Button>
-                  </div>
-                </Form>
-
-                {searchResults.length > 0 && (
-                  <div className="mb-4">
-                    <p className="settings-label">Keresési eredmények:</p>
-                    <div className="settings-friends-list">
-                      {searchResults.map((u) => (
-                        <div key={u.id} className="settings-friend-row">
-                          <span>{u.userName}</span>
-                          {u.id !== Number(userId) &&
-                          !friendIds.includes(u.id) ? (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="settings-add-btn"
-                              onClick={() => handleAddFriend(u.id)}
-                            >
-                              <IconPlus size={16} stroke={2} />
-                              Hozzáadás
-                            </Button>
-                          ) : friendIds.includes(u.id) ? (
-                            <span className="settings-badge">Barát</span>
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <p className="settings-label">Barátaid:</p>
-                {friends.length > 0 ? (
-                  <div className="settings-friends-list">
-                    {friends.map((f) => (
-                      <div key={f.id} className="settings-friend-row">
-                        <span>{f.userName}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="page-card-text mb-0">
-                    Még nincsenek barátaid. Keress rá egy felhasználónévre.
-                  </p>
-                )}
-
-                {friendErr && <p className="settings-err mt-2">{friendErr}</p>}
               </div>
             </Col>
           </Row>

@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
 import { Container, Nav } from "react-bootstrap";
-import { IconStar, IconHeart, IconCalendar, IconMapPin, IconArrowRight } from "@tabler/icons-react";
+import {
+  IconStar,
+  IconHeart,
+  IconCalendar,
+  IconMapPin,
+  IconArrowRight,
+} from "@tabler/icons-react";
 import { Link } from "react-router";
 import ChatWidget from "../components/ChatWidget";
 import { Footer } from "../components/Footer";
 import Menu from "../components/Menu";
 import { useAuth } from "../context/AuthContext";
-import { getRecommendationsByInterest, getRecommendationsByAge } from "../api/user";
+import {
+  getRecommendationsByInterest,
+  getRecommendationsByAge,
+} from "../api/user";
 import "../style/recommendation.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -38,11 +47,21 @@ export function RecommendationPage() {
     try {
       if (activeTab === "interest") {
         const res = await getRecommendationsByInterest();
+        if (res?.statusCode == 404) {
+          setErr(
+            "Nincs elég adat az ajánláshoz. Adj hozzá érdeklődési köröket a beállításokban.",
+          );
+          setInterestRecs([]);
+          return;
+        }
         if (res?.statusCode >= 400 || res?.error) {
-          setErr(res?.message || "Nem sikerült betölteni az ajánlásokat.");
+          setErr("Nem sikerült betölteni az ajánlásokat.");
+          console.log(res.message);
           setInterestRecs([]);
         } else {
-          const list: { id: number; name: string }[] = Array.isArray(res) ? res : [];
+          const list: { id: number; name: string }[] = Array.isArray(res)
+            ? res
+            : [];
           const full = await Promise.all(
             list.map(async (item) => {
               try {
@@ -51,7 +70,7 @@ export function RecommendationPage() {
               } catch {
                 return { ...item, googleplaceID: "", address: "" };
               }
-            })
+            }),
           );
           setInterestRecs(full);
         }
@@ -87,7 +106,8 @@ export function RecommendationPage() {
               Neked <span>ajánlott</span> helyek
             </h1>
             <p className="rec-hero-subtitle">
-              Személyre szabott bárajánlások érdeklődési köreid és korod alapján.
+              Személyre szabott bárajánlások érdeklődési köreid és korod
+              alapján.
             </p>
           </div>
         </Container>
@@ -124,81 +144,80 @@ export function RecommendationPage() {
                 </Nav.Item>
               </Nav>
 
-              {err && <p className="rec-err">{err}</p>}
+              
+              {err && <p className="rec-err"><br />{err}</p>}
 
               {loading ? (
                 <p className="rec-message">Betöltés...</p>
               ) : activeTab === "interest" ? (
                 <div className="rec-list">
                   <br />
-                  {interestRecs.length > 0 ? (
-                    interestRecs.map((bar) => (
-                      <div key={bar.id} className="rec-card">
-                        <div className="rec-card-body">
-                          <div className="rec-card-info">
-                            <span className="rec-card-name">{bar.name}</span>
-                            {bar.address && (
-                              <span className="rec-card-address">
-                                <IconMapPin size={14} stroke={2} />
-                                {bar.address}
-                              </span>
+                  {interestRecs.length > 0
+                    ? interestRecs.map((bar) => (
+                        <div key={bar.id} className="rec-card">
+                          <div className="rec-card-body">
+                            <div className="rec-card-info">
+                              <span className="rec-card-name">{bar.name}</span>
+                              {bar.address && (
+                                <span className="rec-card-address">
+                                  <IconMapPin size={14} stroke={2} />
+                                  {bar.address}
+                                </span>
+                              )}
+                            </div>
+                            {bar.googleplaceID && (
+                              <Link
+                                to={`/bar/${bar.googleplaceID}`}
+                                className="rec-btn"
+                              >
+                                Részletek
+                                <IconArrowRight size={16} stroke={2} />
+                              </Link>
                             )}
                           </div>
-                          {bar.googleplaceID && (
-                            <Link
-                              to={`/bar/${bar.googleplaceID}`}
-                              className="rec-btn"
-                            >
-                              Részletek
-                              <IconArrowRight size={16} stroke={2} />
-                            </Link>
-                          )}
                         </div>
-                      </div>
-                    ))
-                  ) : (
-                    !err && (
-                      <p className="rec-message">
-                        Nincs találat. Adj hozzá érdeklődési köröket a beállításokban.
-                      </p>
-                    )
-                  )}
+                      ))
+                    : !err && (
+                        <p className="rec-message">
+                          Nincs találat. Adj hozzá érdeklődési köröket a
+                          beállításokban.
+                        </p>
+                      )}
                 </div>
               ) : (
                 <div className="rec-list">
                   <br />
-                  {ageRecs.length > 0 ? (
-                    ageRecs.map((bar) => (
-                      <div key={bar.id} className="rec-card">
-                        <div className="rec-card-body">
-                          <div className="rec-card-info">
-                            <span className="rec-card-name">{bar.name}</span>
-                            {bar.address && (
-                              <span className="rec-card-address">
-                                <IconMapPin size={14} stroke={2} />
-                                {bar.address}
-                              </span>
+                  {ageRecs.length > 0
+                    ? ageRecs.map((bar) => (
+                        <div key={bar.id} className="rec-card">
+                          <div className="rec-card-body">
+                            <div className="rec-card-info">
+                              <span className="rec-card-name">{bar.name}</span>
+                              {bar.address && (
+                                <span className="rec-card-address">
+                                  <IconMapPin size={14} stroke={2} />
+                                  {bar.address}
+                                </span>
+                              )}
+                            </div>
+                            {bar.googleplaceID && (
+                              <Link
+                                to={`/bar/${bar.googleplaceID}`}
+                                className="rec-btn"
+                              >
+                                Részletek
+                                <IconArrowRight size={16} stroke={2} />
+                              </Link>
                             )}
                           </div>
-                          {bar.googleplaceID && (
-                            <Link
-                              to={`/bar/${bar.googleplaceID}`}
-                              className="rec-btn"
-                            >
-                              Részletek
-                              <IconArrowRight size={16} stroke={2} />
-                            </Link>
-                          )}
                         </div>
-                      </div>
-                    ))
-                  ) : (
-                    !err && (
-                      <p className="rec-message">
-                        Nincs elég komment az ajánláshoz. Állítsd be a korodat a beállításokban.
-                      </p>
-                    )
-                  )}
+                      ))
+                    : !err && (
+                        <p className="rec-message">
+                          Nincs elég komment az ajánláshoz. Állítsd be a korodat
+                          a beállításokban.
+                        </p>
+                      )}
                 </div>
               )}
             </>

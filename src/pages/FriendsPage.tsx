@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Container, Nav, Button } from "react-bootstrap";
-import { IconUsers, IconUserPlus, IconCheck, IconX, IconDice5 } from "@tabler/icons-react";
+import { IconUsers, IconUserPlus, IconCheck, IconX, IconDice5, IconSearch, IconPlus } from "@tabler/icons-react";
 import ChatWidget from "../components/ChatWidget";
 import { Footer } from "../components/Footer";
 import Menu from "../components/Menu";
 import { useAuth } from "../context/AuthContext";
-import { getFriends, getPendingFriendRequests, dealWithFriendRequest } from "../api/user";
+import { getFriends, getPendingFriendRequests, dealWithFriendRequest, searchByUsername, addFriend } from "../api/user";
 import "../style/friends.css";
 
 interface FriendItem {
@@ -21,12 +21,48 @@ interface PendingItem {
 
 export function Friends() {
   const { isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState<"friends" | "pending">("friends");
+  const [activeTab, setActiveTab] = useState<"friends" | "pending" | "search">("friends");
   const [friends, setFriends] = useState<FriendItem[]>([]);
   const [pending, setPending] = useState<PendingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [actioning, setActioning] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<FriendItem[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [searchErr, setSearchErr] = useState("");
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    setSearching(true);
+    setSearchErr("");
+    try {
+      const res = await searchByUsername(searchQuery.trim());
+      const list = Array.isArray(res) ? res : [];
+      setSearchResults(list);
+    } catch {
+      setSearchResults([]);
+      setSearchErr("Keresési hiba");
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleAddFriend = async (friendId: number) => {
+    setSearchErr("");
+    try {
+      const res = await addFriend(friendId);
+      if (res?.statusCode >= 400 || res?.error) {
+        setSearchErr(res?.message || "Nem sikerült hozzáadni");
+      } else {
+        await loadData();
+        setSearchResults((prev) => prev.filter((u) => u.id !== friendId));
+      }
+    } catch {
+      setSearchErr("Hiba történt");
+    }
+  };
 
   const [showPayModal, setShowPayModal] = useState(false);
   const [selectedForPay, setSelectedForPay] = useState<Set<number>>(new Set());
@@ -211,6 +247,16 @@ export function Friends() {
                       )}
                     </Nav.Link>
                   </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link
+                      active={activeTab === "search"}
+                      onClick={() => setActiveTab("search")}
+                      className="friends-tab"
+                    >
+                      <IconSearch size={18} stroke={2} />
+                      Keresés
+                    </Nav.Link>
+                  </Nav.Item>
                 </Nav>
 
                 {friends.length >= 2 && (
@@ -243,7 +289,7 @@ export function Friends() {
                     </p>
                   )}
                 </div>
-              ) : (
+              ) : activeTab === "pending" ? (
                 <div className="friends-list">
                   <br />
                   {pending.length > 0 ? (
@@ -279,6 +325,61 @@ export function Friends() {
                     <p className="friends-message">
                       Nincsenek függőben lévő barátkérelmek.
                     </p>
+                  )}
+                </div>
+              ) : (
+                <div className="friends-list">
+                  <br />
+                  <div className="friends-search-container mb-4">
+                    <form onSubmit={handleSearch} className="d-flex gap-2">
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Felhasználónév keresése..."
+                        className="friends-search-input grow"
+                      />
+                      <button
+                        type="submit"
+                        className="pay-spin-btn"
+                        style={{ margin: 0, padding: "0 20px", height: "auto" }}
+                        disabled={searching}
+                      >
+                        {searching ? "Keresés..." : "Keresés"}
+                      </button>
+                    </form>
+                  </div>
+
+                  {searchErr && <p className="friends-err">{searchErr}</p>}
+
+                  {searchResults.length > 0 ? (
+                    searchResults.map((u) => {
+                      const isFriend = friends.some((f) => f.id === u.id);
+                      return (
+                        <div key={u.id} className="friends-card">
+                          <div className="friends-card-body">
+                            <span className="friends-name">{u.userName}</span>
+                            {!isFriend && (
+                              <Button
+                                size="sm"
+                                className="friends-btn-accept"
+                                onClick={() => handleAddFriend(u.id)}
+                              >
+                                <IconPlus size={16} stroke={2} />
+                                Hozzáadás
+                              </Button>
+                            )}
+                            {isFriend && (
+                              <span className="friends-badge-success">Barát</span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    !searching && searchQuery && (
+                      <p className="friends-message">Nincs találat.</p>
+                    )
                   )}
                 </div>
               )}

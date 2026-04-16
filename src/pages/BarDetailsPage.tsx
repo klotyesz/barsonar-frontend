@@ -33,6 +33,7 @@ import ChatWidget from "../components/ChatWidget";
 import { Footer } from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 import "../style/barDetails.css";
+import "../style/page-common.css";
 
 declare global {
   interface Window {
@@ -76,10 +77,28 @@ const StarRating = ({ rating, max = 5 }: { rating: number; max?: number }) => {
     <span className="star-rating">
       {Array.from({ length: max }, (_, i) => {
         if (i < full)
-          return <IconStarFilled key={i} size={16} className="star-filled" />;
+          return (
+            <IconStarFilled
+              key={i}
+              size={16}
+              style={{ color: "var(--page-accent)" }}
+            />
+          );
         if (i === full && partial >= 0.5)
-          return <IconStar key={i} size={16} className="star-half" />;
-        return <IconStar key={i} size={16} className="star-empty" />;
+          return (
+            <IconStar
+              key={i}
+              size={16}
+              style={{ color: "var(--page-accent-hover)" }}
+            />
+          );
+        return (
+          <IconStar
+            key={i}
+            size={16}
+            style={{ color: "rgba(154, 160, 166, 0.6)" }}
+          />
+        );
       })}
     </span>
   );
@@ -98,17 +117,15 @@ const ClickableStars = ({
         <IconStarFilled
           key={i}
           size={22}
-          className="star-filled"
           onClick={() => onChange(i + 1)}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", color: "var(--page-accent)" }}
         />
       ) : (
         <IconStar
           key={i}
           size={22}
-          className="star-empty"
           onClick={() => onChange(i + 1)}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", color: "rgba(154, 160, 166, 0.6)" }}
         />
       ),
     )}
@@ -445,7 +462,13 @@ export const BarDetailsPage = () => {
         className="bar-details-hero"
         style={heroPhoto ? { backgroundImage: `url(${heroPhoto})` } : {}}
       >
-        <div className="bar-details-hero-overlay">
+        <div
+          className="bar-details-hero-overlay"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(12, 13, 13, 0.93) 0%, rgba(18, 20, 20, 0.78) 45%, rgba(14, 15, 15, 0.9) 100%)",
+          }}
+        >
           <Container>
             <div className="bar-details-hero-content">
               <Badge
@@ -462,10 +485,10 @@ export const BarDetailsPage = () => {
 
               <div className="bar-hero-ratings">
                 {bar.rating && (
-                  <div className="bar-rating-pill">
+                  <div className="page-stat-pill">
                     <IconBrandGoogle size={14} className="me-1" />
                     <StarRating rating={bar.rating} />
-                    <span className="bar-rating-num">
+                    <span className="page-stat-num">
                       {bar.rating.toFixed(1)}
                     </span>
                     {bar.user_ratings_total && (
@@ -476,10 +499,10 @@ export const BarDetailsPage = () => {
                   </div>
                 )}
                 {ourAvgRating !== null && (
-                  <div className="bar-rating-pill bar-rating-pill--ours">
+                  <div className="page-stat-pill">
                     <IconMessageCircle size={14} className="me-1" />
                     <StarRating rating={ourAvgRating} />
-                    <span className="bar-rating-num">
+                    <span className="page-stat-num">
                       {ourAvgRating.toFixed(1)}
                     </span>
                     <span className="bar-rating-meta">
@@ -500,11 +523,18 @@ export const BarDetailsPage = () => {
               <Col xs={12}>
                 <Card className="bar-details-card">
                   <Card.Body>
-                    <h5 className="bar-section-title">
-                      <IconMapPin size={18} className="section-icon" /> Cím
-                      &amp; Elérhetőség
-                    </h5>
-                    <hr className="bar-divider" />
+                      <h5
+                        className="bar-section-title"
+                        style={{ color: "var(--page-accent)" }}
+                      >
+                        <IconMapPin
+                          size={18}
+                          className="section-icon"
+                          style={{ color: "var(--page-accent)" }}
+                        />{" "}
+                        Cím &amp; Elérhetőség
+                      </h5>
+                    <hr className="page-divider" />
                     <Row className="g-3">
                       {bar.formatted_address && (
                         <Col sm={6}>
@@ -524,7 +554,11 @@ export const BarDetailsPage = () => {
                             </span>
                             <a
                               href={`tel:${bar.formatted_phone_number}`}
-                              className="bar-link bar-info-value"
+                              className="bar-info-value"
+                              style={{
+                                color: "var(--page-accent)",
+                                textDecoration: "none",
+                              }}
                             >
                               {bar.formatted_phone_number}
                             </a>
@@ -541,7 +575,11 @@ export const BarDetailsPage = () => {
                               href={bar.website}
                               target="_blank"
                               rel="noreferrer"
-                              className="bar-link bar-info-value"
+                              className="bar-info-value"
+                              style={{
+                                color: "var(--page-accent)",
+                                textDecoration: "none",
+                              }}
                             >
                               {new URL(bar.website).hostname}
                             </a>
@@ -552,7 +590,10 @@ export const BarDetailsPage = () => {
                         <Col sm={6}>
                           <div className="bar-info-item">
                             <span className="bar-info-label">Árkategória</span>
-                            <span className="bar-info-value bar-price">
+                            <span
+                              className="bar-info-value bar-price"
+                              style={{ color: "var(--page-accent)" }}
+                            >
                               {"€".repeat(bar.price_level + 1)}
                               <span className="bar-price-grey">
                                 {"€".repeat(4 - bar.price_level - 1)}
@@ -570,11 +611,18 @@ export const BarDetailsPage = () => {
                 <Col xs={12}>
                   <Card className="bar-details-card">
                     <Card.Body>
-                      <h5 className="bar-section-title">
-                        <IconClock size={18} className="section-icon" />{" "}
+                      <h5
+                        className="bar-section-title"
+                        style={{ color: "var(--page-accent)" }}
+                      >
+                        <IconClock
+                          size={18}
+                          className="section-icon"
+                          style={{ color: "var(--page-accent)" }}
+                        />{" "}
                         Nyitvatartás
                       </h5>
-                      <hr className="bar-divider" />
+                      <hr className="page-divider" />
                       <ul className="bar-hours-list">
                         {bar.opening_hours.weekday_text.map(
                           (day: string, idx: number) => {
@@ -621,7 +669,7 @@ export const BarDetailsPage = () => {
                           </Nav.Item>
                         </Nav>
                       </div>
-                      <hr className="bar-divider" />
+                      <hr className="page-divider" />
                       <Tab.Content>
                         <Tab.Pane eventKey="our-reviews">
                           {isAuthenticated && (
@@ -661,30 +709,84 @@ export const BarDetailsPage = () => {
                                 />
                                 <button
                                   type="button"
-                                  className="bar-camera-btn"
+                                  className="page-btn-ghost"
                                   onClick={() => fileInputRef.current?.click()}
                                   title="Fotó csatolása"
+                                  style={{
+                                    width: 42,
+                                    height: 42,
+                                    padding: 0,
+                                    borderRadius: 8,
+                                    boxSizing: "border-box",
+                                    position: "relative",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
                                 >
                                   <IconCamera size={18} />
                                   {selectedPhotos.length > 0 && (
-                                    <span className="bar-photo-badge">
+                                    <span
+                                      className="bar-photo-badge"
+                                      style={{
+                                        background: "var(--page-accent)",
+                                        color: "#0d0e0e",
+                                      }}
+                                    >
                                       {selectedPhotos.length}
                                     </span>
                                   )}
                                 </button>
                                 <button
-                                  className="bar-send-btn"
+                                  className="page-btn-primary"
                                   onClick={submitComment}
                                   disabled={
                                     submitting ||
                                     !commentText.trim() ||
                                     commentRating === 0
                                   }
+                                  style={{
+                                    width: 42,
+                                    height: 42,
+                                    padding: 0,
+                                    borderRadius: 8,
+                                    boxSizing: "border-box",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    lineHeight: 0,
+                                    ...(submitting ||
+                                    !commentText.trim() ||
+                                    commentRating === 0
+                                      ? { opacity: 0.45, cursor: "not-allowed" }
+                                      : {}),
+                                  }}
                                 >
                                   {submitting ? (
-                                    <Spinner size="sm" animation="border" />
+                                    <span
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        lineHeight: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                      }}
+                                    >
+                                      <Spinner size="sm" animation="border" />
+                                    </span>
                                   ) : (
-                                    <IconSend size={18} />
+                                    <span
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        lineHeight: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                      }}
+                                    >
+                                      <IconSend size={18} style={{ display: "block" }} />
+                                    </span>
                                   )}
                                 </button>
                               </div>
@@ -721,6 +823,9 @@ export const BarDetailsPage = () => {
                                           src="/default_avatar.png"
                                           alt={`Felhasználó #${c.user?.id ?? "?"}`}
                                           className="bar-review-avatar"
+                                          style={{
+                                            borderColor: "var(--page-accent)",
+                                          }}
                                         />
                                         <div>
                                           <div className="bar-review-author">
@@ -763,6 +868,9 @@ export const BarDetailsPage = () => {
                                             src="/default_avatar.png"
                                             alt={review.author_name}
                                             className="bar-review-avatar"
+                                            style={{
+                                              borderColor: "var(--page-accent)",
+                                            }}
                                           />
                                           <div>
                                             <div className="bar-review-author">
@@ -801,10 +909,18 @@ export const BarDetailsPage = () => {
               <Col xs={12}>
                 <Card className="bar-details-card">
                   <Card.Body>
-                    <h5 className="bar-section-title">
-                      <IconNews size={18} className="section-icon" /> Hírek
+                    <h5
+                      className="bar-section-title"
+                      style={{ color: "var(--page-accent)" }}
+                    >
+                      <IconNews
+                        size={18}
+                        className="section-icon"
+                        style={{ color: "var(--page-accent)" }}
+                      />{" "}
+                      Hírek
                     </h5>
-                    <hr className="bar-divider" />
+                    <hr className="page-divider" />
 
                     {isAuthenticated && (
                       <div className="bar-comment-form mb-4">
@@ -818,14 +934,53 @@ export const BarDetailsPage = () => {
                             className="bar-comment-textarea"
                           />
                           <button
-                            className="bar-send-btn"
+                            className="page-btn-primary"
                             onClick={submitNews}
                             disabled={submittingNews || newsText.trim().length < 10}
+                            style={{
+                              width: 42,
+                              height: 42,
+                              padding: 0,
+                              borderRadius: 8,
+                              boxSizing: "border-box",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              lineHeight: 0,
+                              ...(submittingNews || newsText.trim().length < 10
+                                ? {
+                                    opacity: 0.45,
+                                    cursor: "not-allowed",
+                                  }
+                                : {}),
+                            }}
                           >
                             {submittingNews ? (
-                              <Spinner size="sm" animation="border" />
+                              <span
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  lineHeight: 0,
+                                  width: "100%",
+                                  height: "100%",
+                                }}
+                              >
+                                <Spinner size="sm" animation="border" />
+                              </span>
                             ) : (
-                              <IconSend size={18} />
+                              <span
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  lineHeight: 0,
+                                  width: "100%",
+                                  height: "100%",
+                                }}
+                              >
+                                <IconSend size={18} style={{ display: "block" }} />
+                              </span>
                             )}
                           </button>
                         </div>
@@ -850,7 +1005,11 @@ export const BarDetailsPage = () => {
                     ) : news.length > 0 ? (
                       <div className="bar-news-list">
                         {news.slice().sort((a, b) => b.id - a.id).map((item) => (
-                          <div key={item.id} className="bar-news-item">
+                          <div
+                            key={item.id}
+                            className="bar-news-item"
+                            style={{ borderLeftColor: "var(--page-accent)" }}
+                          >
                             <p className="bar-news-text">{item.text}</p>
                           </div>
                         ))}
@@ -892,7 +1051,7 @@ export const BarDetailsPage = () => {
                           </Nav.Item>
                         </Nav>
                       </div>
-                      <hr className="bar-divider" />
+                      <hr className="page-divider" />
                       <Tab.Content>
                         <Tab.Pane eventKey="our-photos">
                           {ourPhotos.length > 0 ? (

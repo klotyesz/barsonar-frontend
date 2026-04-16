@@ -66,10 +66,10 @@ export async function signup(un: string, e: string, p: string, a?: number) {
 
     const data = await res.json();
 
-    if (!data.ok) {
+    if (!res.ok) {
       throw data.message;
     } else {
-      return data;
+      return { success: true, ...data };
     }
   } catch (err: any) {
     return err;

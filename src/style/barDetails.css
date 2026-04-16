@@ -208,25 +208,25 @@
   font-weight: 600;
   padding: 0.3em 0.85em !important;
   border-radius: 2em !important;
-  color: #9aa0a6 !important;
+  color: var(--page-text-soft) !important;
   background: transparent !important;
-  border: 1px solid #2e3030 !important;
+  border: 1px solid var(--page-border) !important;
   display: inline-flex;
   align-items: center;
   transition: all 0.15s !important;
 }
 
 .bar-tab-pill:hover {
-  color: #fd7e14 !important;
-  border-color: #fd7e14 !important;
-  background: rgba(253,126,20,0.08) !important;
+  color: var(--page-accent) !important;
+  border-color: var(--page-accent) !important;
+  background: var(--page-accent-muted) !important;
 }
 
 .bar-tab-pill.active,
 .bar-tab-pill.show {
   color: #101212 !important;
-  background: #fd7e14 !important;
-  border-color: #fd7e14 !important;
+  background: var(--page-accent) !important;
+  border-color: var(--page-accent) !important;
 }
 
 .bar-review-card {

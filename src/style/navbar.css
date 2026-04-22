@@ -14,12 +14,73 @@
   }
 }
 
-/* Orange accents */
-.text-orange {
-  color: #fd7e14;
+/* Navbar container styling */
+.navbar {
+  background-color: var(--navbar-bg) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--page-border);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.navbar-dark .nav-link.active,
-.navbar-dark .nav-link:hover {
-  color: #fd7e14;
+/* Orange accents */
+.text-orange {
+  color: var(--page-accent);
+}
+
+.nav-link {
+  color: var(--page-text) !important;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: var(--page-accent) !important;
+}
+
+/* Theme toggle switch */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.theme-toggle-track {
+  display: inline-flex;
+  align-items: center;
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: #333;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="light"] .theme-toggle-track {
+  background-color: #e0e0e0;
+}
+
+.theme-toggle-thumb {
+  position: absolute;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+[data-theme="light"] .theme-toggle-thumb {
+  transform: translateX(20px);
+  background-color: var(--page-accent);
+}
+
+.theme-toggle-icon {
+  font-size: 14px;
+  line-height: 1;
 }

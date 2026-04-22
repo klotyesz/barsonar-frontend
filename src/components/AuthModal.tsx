@@ -92,7 +92,7 @@ function AuthModal({ show, onHide }: AuthModalProps) {
             <Nav.Link
               active={mode === "login"}
               onClick={() => setMode("login")}
-              className="text-warning font-weight-bold"
+              className={`${mode === "signup" ? "text-warning" : "text-black"} font-weight-bold`}
             >
               Bejelentkezés
             </Nav.Link>
@@ -101,7 +101,7 @@ function AuthModal({ show, onHide }: AuthModalProps) {
             <Nav.Link
               active={mode === "signup"}
               onClick={() => setMode("signup")}
-              className="text-warning font-weight-bold"
+              className={`${mode === "login" ? "text-warning" : "text-black"} font-weight-bold`}
             >
               Regisztráció
             </Nav.Link>
@@ -148,7 +148,7 @@ function AuthModal({ show, onHide }: AuthModalProps) {
 
           {mode === "signup" && (
             <Form.Group className="mb-3">
-              <Form.Label>Add meg a korod hogy nekedvaló helyeket ajánlhassunk</Form.Label>
+              <Form.Label>Add meg a korod, hogy nekedvaló helyeket ajánlhassunk</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="18"

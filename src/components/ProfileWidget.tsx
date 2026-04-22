@@ -31,7 +31,7 @@ export function ProfileWidget() {
         className="px-4 btn-orange"
         onClick={() => setOpen(!open)}
       >
-        Profile
+        Profil
       </Button>
       <div className={`profile-panel ${open ? "show" : ""}`}>
         <div className="profile-header">

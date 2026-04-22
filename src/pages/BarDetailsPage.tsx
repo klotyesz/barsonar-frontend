@@ -462,13 +462,7 @@ export const BarDetailsPage = () => {
         className="bar-details-hero"
         style={heroPhoto ? { backgroundImage: `url(${heroPhoto})` } : {}}
       >
-        <div
-          className="bar-details-hero-overlay"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(12, 13, 13, 0.93) 0%, rgba(18, 20, 20, 0.78) 45%, rgba(14, 15, 15, 0.9) 100%)",
-          }}
-        >
+        <div className="bar-details-hero-overlay">
           <Container>
             <div className="bar-details-hero-content">
               <Badge

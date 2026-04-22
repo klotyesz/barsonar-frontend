@@ -6,13 +6,16 @@ import { BrowserRouter } from "react-router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/global.css";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import { ThemeProvider } from "./context/ThemeContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,
 );

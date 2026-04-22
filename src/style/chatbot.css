@@ -1,11 +1,3 @@
-:root {
-  --bg-dark: #292b2c;
-  --bg-panel: #1a1a1a;
-  --bg-soft: #2a2a2a;
-  --accent: #f0ad4e;
-  --text: #eaeaea;
-}
-
 .chat-widget {
   position: fixed;
   bottom: 20px;
@@ -13,8 +5,8 @@
   width: 56px;
   height: 56px;
   border-radius: 12px;
-  background: var(--bg-dark);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  background: var(--page-bg-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 0 0 1px var(--page-border);
   cursor: pointer;
   z-index: 1000;
   overflow: hidden;
@@ -35,7 +27,11 @@
   max-height: calc(100vh - 48px);
   border-radius: 16px;
   cursor: default;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px var(--page-border);
+}
+
+[data-theme="dark"] .chat-widget.open {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 .chat-widget-inner {
@@ -90,8 +86,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  background: var(--bg-dark);
-  color: var(--accent);
+  background: var(--page-bg-card);
+  color: var(--page-accent);
   font-weight: 600;
   font-size: 14px;
   border-radius: 16px 16px 0 0;
@@ -101,7 +97,7 @@
 .chat-close {
   background: none;
   border: none;
-  color: var(--text);
+  color: var(--page-text);
   font-size: 18px;
   cursor: pointer;
   padding: 2px 6px;
@@ -113,7 +109,7 @@
 
 .chat-close:hover {
   opacity: 1;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--page-bg-alt);
 }
 
 
@@ -149,14 +145,14 @@
 
 .message.user {
   margin-left: auto;
-  background: var(--accent);
+  background: var(--page-accent);
   color: #1a1a1a;
   border-bottom-right-radius: 4px;
 }
 
 .message.bot {
-  background: var(--bg-panel);
-  color: var(--text);
+  background: var(--page-bg-alt);
+  color: var(--page-text);
   border-bottom-left-radius: 4px;
 }
 
@@ -177,7 +173,7 @@
   display: flex;
   gap: 8px;
   padding: 10px 12px;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--page-border);
   flex-shrink: 0;
 }
 
@@ -194,11 +190,11 @@
 
 .chat-footer textarea {
   flex: 1;
-  background: #111;
-  border: 1px solid #333;
+  background: var(--page-bg);
+  border: 1px solid var(--page-border);
   border-radius: 20px;
   padding: 8px 14px;
-  color: var(--text);
+  color: var(--page-text);
   outline: none;
   font-size: 13px;
   font-family: inherit;
@@ -229,7 +225,7 @@
 }
 
 .chat-footer button {
-  background: var(--accent);
+  background: var(--page-accent);
   border: none;
   border-radius: 50%;
   width: 36px;

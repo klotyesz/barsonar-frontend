@@ -1,14 +1,76 @@
 /* @import url("https://fonts.googleapis.com/css2?family=Nova+Square&display=swap"); */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
+:root,
+[data-theme="dark"] {
+  --bg-color: #0d0e0e;
+  --text-color: #f8f9fa;
+  
+  --page-accent: #e1ad01;
+  --page-accent-hover: #f0c422;
+  --page-accent-muted: rgba(225, 173, 1, 0.12);
+  --page-accent-border: rgba(225, 173, 1, 0.25);
+  
+  --page-bg: #0d0e0e;
+  --page-bg-alt: #1a1c1c;
+  --page-bg-card: #1e2020;
+  --page-bg-card-alt: #222424;
+  --page-border: #2e3030;
+  
+  --page-text: #eaeaea;
+  --page-text-muted: #7a8088;
+  --page-text-soft: #9aa0a6;
+  
+  --hero-overlay: linear-gradient(
+    135deg,
+    rgba(12, 13, 13, 0.93) 0%,
+    rgba(18, 20, 20, 0.78) 45%,
+    rgba(14, 15, 15, 0.9) 100%
+  );
+  
+  --navbar-bg: rgba(13, 14, 14, 0.95);
+  --footer-bg: #0d0e0e;
+}
+
+[data-theme="light"] {
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  
+  --page-accent: #e1ad01;
+  --page-accent-hover: #d1a001;
+  --page-accent-muted: rgba(225, 173, 1, 0.15);
+  --page-accent-border: rgba(225, 173, 1, 0.3);
+  
+  --page-bg: #f8f9fa;
+  --page-bg-alt: #ffffff;
+  --page-bg-card: #ffffff;
+  --page-bg-card-alt: #f1f3f5;
+  --page-border: #dee2e6;
+  
+  --page-text: #212529;
+  --page-text-muted: #6c757d;
+  --page-text-soft: #495057;
+  
+  --hero-overlay: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(248, 249, 250, 0.8) 45%,
+    rgba(255, 255, 255, 0.92) 100%
+  );
+  
+  --navbar-bg: rgba(255, 255, 255, 0.95);
+  --footer-bg: #f8f9fa;
+}
+
 html,
 body,
 #root {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  background-color: #292b2c;
-  color: #eaeaea;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.2s ease, color 0.2s ease;
   /* font-family: "Teko", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400px;

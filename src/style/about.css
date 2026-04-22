@@ -12,12 +12,7 @@
 .about-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(12, 13, 13, 0.93) 0%,
-    rgba(18, 20, 20, 0.78) 45%,
-    rgba(14, 15, 15, 0.9) 100%
-  );
+  background: var(--hero-overlay);
 }
 
 .about-hero-content {
@@ -29,10 +24,10 @@
 .about-hero-title {
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 700;
-  color: #fff;
+  color: var(--page-text);
   line-height: 1.15;
   letter-spacing: -0.02em;
-  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.2);
   margin-bottom: 1rem;
 }
 
@@ -70,12 +65,12 @@
 
 .about-body {
   padding: 3.5rem 0 4rem;
-  background: var(--page-bg-dark);
+  background: var(--page-bg);
 }
 
 .about-mission-card,
 .about-timeline-card {
-  background: var(--page-bg-dark);
+  background: var(--page-bg-card);
   border: 1px solid var(--page-border);
   padding: 2rem 1.8rem;
   height: 100%;
@@ -85,8 +80,13 @@
 
 .about-mission-card:hover,
 .about-timeline-card:hover {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   transform: translateY(-3px);
+}
+
+[data-theme="dark"] .about-mission-card:hover,
+[data-theme="dark"] .about-timeline-card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .about-feature-card {
@@ -110,9 +110,13 @@
 }
 
 .about-feature-card:hover {
-  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.1);
   transform: translateY(-4px);
   border-color: var(--page-accent-border);
+}
+
+[data-theme="dark"] .about-feature-card:hover {
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.45);
 }
 
 .about-feature-card::before {
@@ -156,7 +160,7 @@
   background: linear-gradient(
     to bottom,
     var(--page-accent),
-    rgba(225, 173, 1, 0.1)
+    var(--page-accent-muted)
   );
   border-radius: 1px;
 }
@@ -179,7 +183,7 @@
   border-radius: 50%;
   background: var(--page-accent);
   border: 2px solid var(--page-bg-card);
-  box-shadow: 0 0 0 2px rgba(225, 173, 1, 0.2);
+  box-shadow: 0 0 0 2px var(--page-accent-muted);
 }
 
 .about-timeline-year {
@@ -232,7 +236,7 @@
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  background: #272a2b;
+  background: var(--page-bg-alt);
   border: 1px solid var(--page-border);
   color: var(--page-accent);
   border-radius: 2em;
@@ -265,16 +269,20 @@
 }
 
 .about-team-card:hover {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   transform: translateY(-3px);
   border-color: var(--page-accent-border);
+}
+
+[data-theme="dark"] .about-team-card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .about-team-avatar {
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  background: #272a2b;
+  background: var(--page-bg-alt);
   border: 2px solid var(--page-accent);
   display: flex;
   align-items: center;
@@ -337,7 +345,7 @@
 .about-cta-title {
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 700;
-  color: #fff;
+  color: var(--page-text);
   margin-bottom: 0.5rem;
   position: relative;
 }

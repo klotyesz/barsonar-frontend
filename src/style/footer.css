@@ -1,10 +1,11 @@
 .footer {
-  background-color: var(--page-bg-dark);
+  background-color: var(--footer-bg);
   color: var(--page-text);
   padding: 4rem 0 2rem;
   border-top: 1px solid var(--page-border);
   position: relative;
   overflow: hidden;
+  transition: background-color 0.3s ease;
 }
 
 .footer::before {
@@ -38,7 +39,7 @@
 .footer-heading {
   font-size: 1rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--page-text);
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;

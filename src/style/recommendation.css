@@ -3,7 +3,7 @@
 .rec-hero {
   position: relative;
   min-height: 40vh;
-  background: url("/banner.png") center / cover no-repeat;
+  background: url("/logo.png") center / cover no-repeat;
   display: flex;
   align-items: center;
   overflow: hidden;

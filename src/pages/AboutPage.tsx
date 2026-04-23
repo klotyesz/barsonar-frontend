@@ -54,15 +54,22 @@ const team = [
     initials: "SG",
     name: "Sarkadi Gábor",
     role: "Fejlesztő & Alapító",
-    bio: "Frontend fejlesztő, a BarSonar frontendjének és design-jának megvalósítója.",
+    bio: "Frontend fejlesztő, a BarSonar frontendjének és design-jának megvalósítója, valamint AI integráció mestere.",
     github: "https://github.com/klotyesz",
   },
   {
     initials: "KA",
     name: "Kobela András",
     role: "Fejlesztő & Alapító",
-    bio: "Backend fejlesztő, a BarSonar backendjének és admin felületének tervezője és megvalósítója.",
+    bio: "Backend fejlesztő, a BarSonar backendjének és admin felületének tervezője és megvalósítója, valamint Docker zseni.",
     github: "https://github.com/jaaajaaaja",
+  },
+  {
+    initials: "KM",
+    name: "Kalota Márton",
+    role: "API információgyűjtő",
+    bio: "API információgyűjtő, a BarSonar API térképes adatok és bár-információk gyűjtésének és rendszerezésének felelőse.",
+    github: "https://github.com/martonkalota",
   },
 
 ];
@@ -191,6 +198,8 @@ export function About() {
               </Col>
             </Row>
 
+            <br />
+            <br />
             <Row className="mb-5">
               <Col xs={12} className="mb-3">
                 <p className="page-section-label">Funkciók</p>

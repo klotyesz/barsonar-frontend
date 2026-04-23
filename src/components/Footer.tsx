@@ -5,9 +5,9 @@ import "../style/footer.css";
 export function Footer() {
   return (
     <footer className="footer">
-      <Container>
+      <Container fluid className="px-4 px-md-5">
         <Row className="g-4">
-          <Col lg={4} md={6}>
+          <Col lg={6} md={6}>
             <div className="footer-logo-container">
               <Link to="/">
                 <img src="/logo.png" alt="BarSonar" className="footer-logo" />
@@ -19,7 +19,7 @@ export function Footer() {
             </div>
           </Col>
 
-          <Col lg={4} md={6} className="ps-lg-5">
+          <Col lg={6} md={6} className="ps-lg-5">
             <h4 className="footer-heading">Navigáció</h4>
             <ul className="footer-links">
               <li className="footer-link-item">
@@ -40,6 +40,11 @@ export function Footer() {
               <li className="footer-link-item">
                 <Link to="/about" className="footer-link">
                   Rólunk
+                </Link>
+              </li>
+              <li className="footer-link-item">
+                <Link to="/help" className="footer-link">
+                  Segítség
                 </Link>
               </li>
             </ul>

@@ -73,27 +73,6 @@ const steps = [
   },
 ];
 
-const popularBars = [
-  {
-    name: "Ruin Bar Klassz",
-    location: "Budapest, VII. ker.",
-    rating: "4.7",
-    icon: "🍺",
-  },
-  {
-    name: "Komlókert",
-    location: "Budapest, VI. ker.",
-    rating: "4.5",
-    icon: "🍻",
-  },
-  {
-    name: "Night Owl Lounge",
-    location: "Budapest, VIII. ker.",
-    rating: "4.8",
-    icon: "🦉",
-  },
-];
-
 export function Home() {
   return (
     <>
@@ -120,7 +99,8 @@ export function Home() {
 
               <p className="page-hero-subtitle">
                 A BarSonar összehoz téged, a legjobb bárokkal és a mesterséges
-                intelligenciával - hogy soha többé ne pazarolj időt keresgéléssel.
+                intelligenciával - hogy soha többé ne pazarolj időt
+                keresgéléssel.
               </p>
 
               <div className="page-hero-ctas">
@@ -155,8 +135,6 @@ export function Home() {
               </div>
             </div>
           </Container>
-
-          
         </section>
 
         <section className="page-features-section">
@@ -168,7 +146,7 @@ export function Home() {
                 <h2 className="page-section-title">
                   Minden, amire szükséged van
                   <br />
-                  egy <span>jó este</span> előtte.
+                  egy <span>jó este</span> előtt.
                 </h2>
               </Col>
               <Col lg={6} className="d-flex align-items-end">
@@ -217,8 +195,8 @@ export function Home() {
               </Col>
 
               <Col lg={7}>
-                  {steps.map((s) => (
-                    <>
+                {steps.map((s) => (
+                  <>
                     <div key={s.n} className="page-step">
                       <div className="page-step-num">{s.n}</div>
                       <div>
@@ -227,8 +205,8 @@ export function Home() {
                       </div>
                     </div>
                     <br />
-                    </>
-                  ))}
+                  </>
+                ))}
               </Col>
             </Row>
           </Container>
@@ -265,7 +243,8 @@ export function Home() {
                   <div>
                     <p className="page-chat-label page-chat-label--user">Te</p>
                     <div className="page-chat-bubble page-chat-bubble--user">
-                      Hangulatos bárt keresek, nem túl drágán, Pest közepén, ma estére.
+                      Hangulatos bárt keresek, nem túl drágán, Pest közepén, ma
+                      estére.
                     </div>
                   </div>
                   <div>
@@ -289,55 +268,13 @@ export function Home() {
                       BarSonar AI
                     </p>
                     <div className="page-chat-bubble page-chat-bubble--ai">
-                      Igen, több helyi kisfőzde söre közül is választhatsz! A Hegedűs
-                      Pale Ale különösen népszerű az értékelések alapján.
+                      Igen, több helyi kisfőzde söre közül is választhatsz! A
+                      Hegedűs Pale Ale különösen népszerű az értékelések
+                      alapján.
                     </div>
                   </div>
                 </div>
               </Col>
-            </Row>
-          </Container>
-        </section>
-
-        <section className="page-bars-section">
-          <Container>
-            <Row className="align-items-end mb-4">
-              <Col>
-                <p className="page-section-label">Népszerű bárok</p>
-                <hr className="page-divider" />
-                <h2 className="page-section-title">
-                  Legjobban <span>értékelt</span> helyek.
-                </h2>
-              </Col>
-              <Col xs="auto">
-                <Link to="/popular" className="page-btn-ghost">
-                  Összes megjelenítése
-                  <IconArrowRight size={16} stroke={2} />
-                </Link>
-              </Col>
-            </Row>
-
-            <Row className="g-4">
-              {popularBars.map((bar) => (
-                <Col key={bar.name} md={4}>
-                  <Link to="/popular" className="page-bar-card">
-                    <div className="page-bar-card-thumb">
-                      <span style={{ fontSize: "2.4rem" }}>{bar.icon}</span>
-                    </div>
-                    <div className="page-bar-card-body">
-                      <p className="page-bar-card-name">{bar.name}</p>
-                      <p className="page-bar-card-meta">
-                        <IconMapPin size={12} stroke={2} />
-                        {bar.location}
-                      </p>
-                      <span className="page-bar-card-rating">
-                        <IconStar size={13} stroke={2} />
-                        {bar.rating}
-                      </span>
-                    </div>
-                  </Link>
-                </Col>
-              ))}
             </Row>
           </Container>
         </section>
@@ -352,8 +289,8 @@ export function Home() {
                 Készen állsz a következő <span>estédre</span>?
               </h2>
               <p className="page-cta-text">
-                Több száz bár, értékelésekkel, AI támogatással - minden,
-                ami kell egy emlékezetes estéhez.
+                Több száz bár, értékelésekkel, AI támogatással - minden, ami
+                kell egy emlékezetes estéhez.
               </p>
               <div className="d-flex justify-content-center gap-3 flex-wrap">
                 <Link to="/bars" className="page-btn-primary">

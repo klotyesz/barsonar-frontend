@@ -2,16 +2,26 @@
 
 ## <span style="color:purple">Tartalomjegyzék</span>
 - [Tartalomjegyzék](#tartalomjegyzék)
+- [Röviden](#röviden)
 - [Stack](#stack)
 - [Előfeltételek](#előfeltételek)
 - [Telepítés](#telepítés)
-    - [1. Klónozás és függőségek telepítése](#1-klónozás-és-függőségek-telepítése)
-    - [2. Környezeti változók](#2-környezeti-változók)
+  - [1. Klónozás és függőségek telepítése](#1-klónozás-és-függőségek-telepítése)
+  - [2. Környezeti változók](#2-környezeti-változók)
+- [Fejlesztői futtatás](#fejlesztői-futtatás)
 - [Futtatás Dockerben](#futtatás-dockerben)
-- [Futtatás](#futtatás)
-- [Backend kapcsolat](#backend-kapcsolat)
+- [Backend kapcsolat és proxy](#backend-kapcsolat-és-proxy)
+- [Elérhető oldalak (route-ok)](#elérhető-oldalak-route-ok)
+- [BarSonar AI (Cloudflare Worker)](#barsonar-ai-cloudflare-worker)
+- [Scriptek](#scriptek)
 - [Tesztelés](#tesztelés)
 - [Hozzájárulás](#hozzájárulás)
+
+---
+
+## <span style="color:purple">Röviden</span>
+
+A **BarSonar Frontend** egy React + TypeScript + Vite alapú webalkalmazás. Fejlesztés közben a Vite dev szerver az API hívásokat az `/api` útvonalról a backend felé **proxy-zza**, illetve a projekt tartalmaz egy külön **Cloudflare Worker** alprojektet (`barsonar-ai/`) a valós idejű funkciókhoz (pl. chat).
 
 ---
 
@@ -34,8 +44,8 @@ A projekt futtatásához szükséges:
 
 - **<span style="color:red">Node.js</span>**
 - **<span style="color:red">npm</span>**
-- **<span style="color: #1D63ED">Docker Desktop</span>**, ha csak futtatni szeretnéd a programot, nem fejleszteni
-- **<span style="color:red">[BarSonar Backend](https://github.com/jaaajaaaja/VizsgaRemek_Backend)</span>** – a frontend a backend API-t használja, ezért a backend futnia kell
+- **<span style="color: #1D63ED">Docker Desktop</span>** (opcionális), ha Dockerben szeretnéd futtatni
+- **<span style="color:red">[BarSonar Backend](https://github.com/jaaajaaaja/VizsgaRemek_Backend)</span>** – a frontend a backend API-t használja, ezért a backendnek futnia kell
 
 ---
 
@@ -67,65 +77,96 @@ VITE_GOOGLE_MAPS_API_KEY=Your-Google-Maps-API-Key-Goes-Here
 
 **Megjegyzések:**
 
-- `VITE_API_BASE_URL` – a backend API alapcímére mutat (fejlesztéskor gyakran `/api`, amikor a Vite proxy használatban van)
-- `VITE_PROXY_TARGET` – a backend szerver címe, amit a Vite fejlesztési szerver proxy-z (általában `http://localhost:3000`)
-- `VITE_WORKER_URL` – a Cloudflare Worker URL-je a valós idejű chathez
-- `VITE_GOOGLE_MAPS_API_KEY` – Google Maps API kulcs a térképhez és helyrészletekhez
+- `VITE_API_BASE_URL` – az API “base path” a frontendben (fejlesztéskor jellemzően `/api`)
+- `VITE_PROXY_TARGET` – a backend címe, ahová a Vite proxy továbbít (alapértelmezett: `http://localhost:3000`)
+- `VITE_WORKER_URL` – a Cloudflare Worker URL-je (pl. valós idejű chat)
+- `VITE_GOOGLE_MAPS_API_KEY` – Google Maps API kulcs a térképhez/helyadatokhoz
 
 ---
 
-## <span style="color:purple">Futtatás Dockerben</span>
-
-Ha nem szeretnéd fejleszteni az alkalmazást, csak futtatni, elég, ha letöltöd a Docker-t, beírsz két parancsot, és már fut is az alkalmazás. A kódot attól még le kell tölteni a gépedre.
-
-Ha változtatni szeretnél a környezeti változókon, a `compose.yaml` fájlban megteheted.
-
----
-
-#### Fontos!
-Ha Windows operációs rendszeren akarod futtatni a konténert CMD-ből (parancssorból) add ki a következő utasításokat NE PowerShell-ből, különben nem fogja az ```docker-entrypoint.sh``` fájlt megtalálni. 
-Azonban ha egyszer elindítottad CMD-ből utána el tudod indítani PowerShell-ből is.
-
----
-```bash
-docker build -t barsonar-frontend --no-cache .
-docker compose up
-```
-
----
-
-## <span style="color:purple">Futtatás</span>
+## <span style="color:purple">Fejlesztői futtatás</span>
 
 ```bash
 npm run dev
 ```
 
-Az alkalmazás a
+Az alkalmazás alapértelmezetten itt érhető el:
 - `http://localhost:5173`
-- `https://localhost:5173` (SSL támogatással)
 
-címeken lesz elérhető.
+---
 
-**Build production verzióhoz:**
+## <span style="color:purple">Futtatás Dockerben</span>
+
+Gyors indítás:
 
 ```bash
-npm run build
-npm run preview   # Előnézet a production buildről
+docker compose up --build
+```
+
+**Fontos:** a `compose.yaml` a Vite környezeti változókat **build argként** adja át, tehát ezek az értékek a build során “beleégnek” a production bundle-be. Ha változtatni szeretnél rajtuk, futtasd újra a buildet (pl. `docker compose up --build`), vagy módosítsd a `compose.yaml`-t.
+
+További Docker jegyzetek: `README.Docker.md`.
+
+---
+
+## <span style="color:purple">Backend kapcsolat és proxy</span>
+
+- Fejlesztés közben az `/api/*` hívások proxy-zva vannak a `VITE_PROXY_TARGET` felé (lásd `vite.config.ts`).
+- A proxy `rewrite`-olja az útvonalat, azaz a backend felé a `/api` prefix lekerül.
+- Ha a backend más címen fut, állítsd át a `.env`-ben a `VITE_PROXY_TARGET` értékét.
+
+---
+
+## <span style="color:purple">Elérhető oldalak (route-ok)</span>
+
+A jelenlegi route-ok (`src/App.tsx`) röviden:
+
+- `/` – Home
+- `/about` – About
+- `/bars` – Bárok listája
+- `/bar/:barId` – Bár részletek
+- `/recommendations` – Ajánlások
+- `/friends` – Ismerősök
+- `/settings` – Beállítások
+- `/help` – Súgó
+
+---
+
+## <span style="color:purple">BarSonar AI (Cloudflare Worker)</span>
+
+A repo tartalmaz egy külön alprojektet is: `barsonar-ai/` (Wrangler + Cloudflare Worker).
+
+Hasznos parancsok:
+
+```bash
+cd barsonar-ai
+npm install
+wrangler deploy
+```
+
+A frontend a Worker URL-t a `VITE_WORKER_URL` változóból olvassa.
+
+---
+
+## <span style="color:purple">Scriptek</span>
+
+Fő frontend (`package.json`):
+
+- `npm run dev` – fejlesztői szerver (Vite)
+- `npm run build` – TypeScript build + Vite build
+- `npm run preview` – production build előnézet
+- `npm run lint` – ESLint
+- `npm test` – Vitest (CI-szerű futtatás)
+
+---
+
+## <span style="color:purple">Tesztelés</span>
+
+```bash
+npm test
 ```
 
 ---
-
-## <span style="color:purple">Backend kapcsolat</span>
-
-A frontend a BarSonar backend API-t használja. Fejlesztés közben:
-
-1. Indítsd el a backendet (általában `http://localhost:3000`-en)
-2. A Vite proxy automatikusan a `VITE_PROXY_TARGET` címen lévő backendre irányítja az API hívásokat
-3. Ha a backend más porton vagy URL-en fut, módosítsd a `.env` fájlban a `VITE_PROXY_TARGET` és `VITE_API_BASE_URL` értékeket
-
----
-
-
 
 ## <span style="color:purple">Hozzájárulás</span>
 
@@ -141,6 +182,6 @@ A frontend a BarSonar backend API-t használja. Fejlesztés közben:
 
 **Készítette:** BarSonar fejlesztői csapat  
 
-**Verzió:** 0.0.01 
+**Verzió:** 1.0.0
 
 **Utolsó frissítés:** 2026
